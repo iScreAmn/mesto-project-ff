@@ -4,8 +4,9 @@
 ## Описание проекта:
 Начало сервиса "Mesto"
 
-## Технологии:
-JavaScript
-Flexbox  
-BEM Nested
-HTML
+#### Технологии:
+  * HTML 5
+  * CSS 3
+  * JavaScript
+  * Flexbox
+  * BEM Nested
