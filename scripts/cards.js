@@ -4,7 +4,7 @@ const initialCards = [
       link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg",
     },
     {
-      name: "Челябинская область",
+      name: "Челябинск",
       link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg",
     },
     {
@@ -16,7 +16,7 @@ const initialCards = [
       link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg",
     },
     {
-      name: "Холмогорский район",
+      name: "Холмогорский",
       link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg",
     },
     {
