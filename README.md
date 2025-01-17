@@ -1,12 +1,11 @@
-# **Проектная работа "Mesto"**
-Яндекс.Практикум (https://practicum.yandex.ru/)
+# **Сервис "Mesto"**
 
 ## Описание проекта:
-Начало сервиса "Mesto"
+Сервис "Mesto" приложение в котором можно загружать и хранить фотографии
 
 #### Технологии:
-  * HTML 5
-  * CSS 3
+  * HTML
+  * CSS3
   * JavaScript
-  * Flexbox
+  * Webpack
   * BEM Nested
