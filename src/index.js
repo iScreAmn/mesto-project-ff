@@ -68,3 +68,42 @@ function renderCards(cards, handleDeleteCard) {
 }
 // Вызов функции для добавления карточек на страницу при загрузке
 renderCards(initialCards, handleDeleteCard);
+
+
+
+// ADD BUTTON LOGIC
+
+const addButton = document.querySelector('.profile__add-button'); // Кнопка для открытия
+const popup = document.querySelector('.popup_type_new-card'); // Модальное окно для добавления
+const addCloseButton = popup.querySelector('.popup__close'); // Кнопка закрытия для добавления
+const editButton = document.querySelector('.profile__edit-button'); // Кнопка "Редактировать"
+const editModal = document.querySelector('.popup_type_edit'); // Модальное окно редактирования
+const editCloseButton = editModal.querySelector('.popup__close'); // Кнопка закрытия для редактирования
+
+// Функция открытия модального окна для добавления
+function openAddPopup() {
+  popup.style.display = 'flex'; // Показываем модальное окно для добавления
+}
+
+// Функция закрытия модального окна для добавления
+function closeAddPopup() {
+  popup.style.display = 'none'; // Скрываем модальное окно для добавления
+}
+
+// События для модального окна добавления
+addButton.addEventListener('click', openAddPopup); // Открытие при нажатии на кнопку добавления
+addCloseButton.addEventListener('click', closeAddPopup); // Закрытие при нажатии на крестик
+
+// Функция открытия модального окна для редактирования
+function openEditPopup() {
+  editModal.style.display = 'flex'; // Показываем модальное окно для редактирования
+}
+
+// Функция закрытия модального окна для редактирования
+function closeEditPopup() {
+  editModal.style.display = 'none'; // Скрываем модальное окно для редактирования
+}
+
+// События для модального окна редактирования
+editButton.addEventListener('click', openEditPopup); // Открытие при нажатии на кнопку редактирования
+editCloseButton.addEventListener('click', closeEditPopup); // Закрытие при нажатии на крестик
