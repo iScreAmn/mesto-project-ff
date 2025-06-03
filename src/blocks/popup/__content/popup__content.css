@@ -1,3 +1,15 @@
+
+.popup.popup_type_new-card {
+  display: none;
+  /* opacity: 0; */
+  pointer-events: none; /* отключает клики */
+  transition: visibility 0s 0.3s, opacity 0.3s; /* анимация */
+}
+
+.popup.popup_type_image {
+  /* display: flex; */
+}
+
 .popup__content {
   max-width: 430px;
   width: 100%;
@@ -7,7 +19,15 @@
   position: relative;
   box-sizing: border-box;
   padding: 34px 36px;
+
+  visibility: visible; /* становится видимым */
+  opacity: 1; /* становится непрозрачным */
+  pointer-events: auto; /* включаем клики */
+  
+  
 }
+
+
 
 @media screen and (max-width: 568px) {
   .popup__content {
