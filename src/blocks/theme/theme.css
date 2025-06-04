@@ -21,8 +21,6 @@
 
 }
 
-
-
 /* Тёмная тема */
 [data-theme="dark"] {
   --background-color: #fff;
@@ -38,7 +36,9 @@
   --border-color: #000;
 }
 
-
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
 
 .theme {
   width: 130px;
