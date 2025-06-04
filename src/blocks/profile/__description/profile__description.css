@@ -3,6 +3,7 @@
   line-height: 22px;
   grid-area: description;
   margin: 0;
+  color: var(--text-color);
 }
 
 @media screen and (max-width: 568px) {
