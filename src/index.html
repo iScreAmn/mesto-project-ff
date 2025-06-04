@@ -12,26 +12,10 @@
 <body class="page">
   <div class="page__content">
     <header class="header page__section">
-      <img src="<%=require('./images/logo.svg')%>" alt="Логотип проекта место" class="logo header__logo">
-      <label for="theme" class="theme">
-        <span>Light</span>
-        <span class="theme__toggle-wrap">
-          <input id="theme" class="theme__toggle" type="checkbox" role="switch" name="theme" value="dark">
-          <span class="theme__fill"></span>
-          <span class="theme__icon">
-            <span class="theme__icon-part"></span>
-            <span class="theme__icon-part"></span>
-            <span class="theme__icon-part"></span>
-            <span class="theme__icon-part"></span>
-            <span class="theme__icon-part"></span>
-            <span class="theme__icon-part"></span>
-            <span class="theme__icon-part"></span>
-            <span class="theme__icon-part"></span>
-            <span class="theme__icon-part"></span>
-          </span>
-        </span>
-        <span>Dark</span>
-      </label>
+      <div class="header__logo"></div>
+      <div class="theme">
+        <input type="checkbox" name="checkbox" class="switch">
+      </div>
     </header>
     <main class="content">
       <section class="profile page__section">

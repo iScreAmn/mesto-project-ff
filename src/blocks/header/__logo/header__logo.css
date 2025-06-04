@@ -1,7 +1,10 @@
 .header__logo {
   width: 142px;
   height: 33px;
-  object-fit: contain;
+  background-image: var(--logo-image);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
 }
 
 @media screen and (max-width: 480px) {

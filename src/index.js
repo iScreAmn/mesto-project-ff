@@ -1,12 +1,15 @@
-// const firstImage = new URL('./images/card_1.jpg', import.meta.url);
-// const secondImage = new URL('./images/card_2.jpg', import.meta.url);
-// const thirdImage = new URL('./images/card_3.jpg', import.meta.url)
-
 import './pages/index.css';
 import avatarImage from './images/avatar.jpg';
 import { initialCards } from './components/cards.js';
 import { createCardElement, handleDeleteCard, handleLikeCard } from './components/card.js';
 import { openModal, closeModal } from './components/modal.js';
+import './blocks/theme/theme.css';
+import { initThemeToggle } from './components/theme.js';
+
+document.addEventListener('DOMContentLoaded', () => {
+  initThemeToggle();
+});
+
 
 // Установите изображение как background-image
 const profileImageDiv = document.querySelector('.profile__image');
@@ -24,6 +27,8 @@ const popupImage = document.querySelector('.popup_type_image'); // Попап д
 const closeButtonEditProfile = popupEditProfile.querySelector('.popup__close');
 const closeButtonNewCard = popupNewCard.querySelector('.popup__close');
 const closeButtonImage = popupImage ? popupImage.querySelector('.popup__close') : null; // Кнопка закрытия попапа изображения
+
+
 
 // Функция для добавления карточек на страницу
 function renderCards(cards) {
