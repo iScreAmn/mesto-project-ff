@@ -2,6 +2,8 @@ export function initThemeToggle() {
   const themeToggle = document.querySelector('.theme');
   const html = document.documentElement;
 
+  const checkbox = document.querySelector('.switch');
+
   // Получение сохранённой темы из localStorage или системной настройки
   const savedTheme = localStorage.getItem('theme');
   const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -9,6 +11,9 @@ export function initThemeToggle() {
 
   // Установка текущей темы
   setTheme(currentTheme);
+  if (checkbox) {
+    checkbox.checked = currentTheme === 'dark';
+  }
 
   // Обработчик переключения темы
   themeToggle.addEventListener('click', () => {
@@ -17,9 +22,15 @@ export function initThemeToggle() {
     localStorage.setItem('theme', newTheme);
   });
 
+  if (checkbox) {
+    checkbox.addEventListener('change', () => {
+      const newTheme = checkbox.checked ? 'dark' : 'light';
+      setTheme(newTheme);
+      localStorage.setItem('theme', newTheme);
+    });
+  }
+
   function setTheme(theme) {
     html.setAttribute('data-theme', theme);
-    setTimeout(() => {
-    }, 300);
   }
 }
