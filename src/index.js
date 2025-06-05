@@ -121,7 +121,31 @@ if (formNewCard) {
   formNewCard.addEventListener("submit", (evt) => {
     evt.preventDefault();
 
-    closeModal(popupNewCard);
-    evt.target.reset(); // Очистка формы
+    const nameInput = formNewCard.querySelector('input[name="place-name"]');
+    const linkInput = formNewCard.querySelector('input[name="link"]');
+
+    const name = nameInput?.value.trim();
+    const link = linkInput?.value.trim();
+
+    if (!name || !link) {
+      console.warn("Поля формы не должны быть пустыми.");
+      return;
+    }
+
+    const newCardData = { name, link };
+
+    // Создание новой карточки с использованием готовой функции
+    const newCardElement = createCardElement(
+      newCardData,
+      handleDeleteCard,
+      handleLikeCard,
+      openImagePopup
+    );
+
+    // Добавляем карточку в начало списка
+    placesList.prepend(newCardElement);
+
+    closeModal(popupNewCard); // Закрываем модальное окно после добавления карточки
+    evt.target.reset(); // Очищаем форму после отправки
   });
 }
