@@ -9,9 +9,17 @@ import {
   handleDeleteCard,
   handleLikeCard,
 } from "./components/card.js";
+import { saveProfileData, loadProfileData } from './data/storage.js';
 
 document.addEventListener("DOMContentLoaded", () => {
   initThemeToggle();
+  const savedProfile = loadProfileData();
+  if (savedProfile) {
+    const profileTitle = document.querySelector(".profile__title");
+    const profileDescription = document.querySelector(".profile__description");
+    profileTitle.textContent = savedProfile.name;
+    profileDescription.textContent = savedProfile.description;
+  }
 });
 
 // Установите изображение как background-image
@@ -53,6 +61,12 @@ closeButtonNewCard.addEventListener("click", () => closeModal(popupNewCard));
 
 // События для модального окна редактирования
 profileEditButton.addEventListener("click", () => {
+  const profileTitle = document.querySelector(".profile__title");
+  const profileDescription = document.querySelector(".profile__description");
+  const nameInput = popupEditProfile.querySelector('input[name="name"]');
+  const descriptionInput = popupEditProfile.querySelector('input[name="description"]');
+  nameInput.value = profileTitle.textContent;
+  descriptionInput.value = profileDescription.textContent;
   openModal(popupEditProfile);
 });
 closeButtonEditProfile.addEventListener("click", () =>
@@ -88,7 +102,16 @@ const formEditProfile = popupEditProfile.querySelector(".popup__form");
 if (formEditProfile) {
   formEditProfile.addEventListener("submit", (evt) => {
     evt.preventDefault();
-
+    const nameInput = formEditProfile.querySelector('input[name="name"]');
+    const descriptionInput = formEditProfile.querySelector('input[name="description"]');
+    const profileTitle = document.querySelector(".profile__title");
+    const profileDescription = document.querySelector(".profile__description");
+    profileTitle.textContent = nameInput.value;
+    profileDescription.textContent = descriptionInput.value;
+    saveProfileData({
+      name: nameInput.value,
+      description: descriptionInput.value
+    });
     closeModal(popupEditProfile);
   });
 }
