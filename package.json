@@ -1,6 +1,6 @@
 {
   "name": "mesto-project-ff",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Яндекс.Практикум (https://practicum.yandex.ru/)",
   "main": "index.js",
   "scripts": {
