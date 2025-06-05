@@ -2,12 +2,14 @@
 
 .header {
   min-height: 120px;
-  font-family: 'Inter', Arial, sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  gap: 600px;
+  gap: clamp(40px, 40vw, 600px);
+  padding: 0 20px;
+  box-sizing: border-box;
+  /* flex-wrap: wrap; */
 }
 
 .header::before {
@@ -26,11 +28,28 @@
   bottom: 0;
 }
 
+@media screen and (max-width: 768px) {
+  .header {
+    /* flex-direction: column; */
+  }
+}
+
+@media screen and (max-width: 621px) {
+  .theme {
+    display: none;
+  }
+}
+
 @media screen and (max-width: 480px) {
   .header {
     min-height: 85px;
   }
+
   .header::before {
     width: calc(100% + 40px);
+  }
+
+  .theme {
+    display: none;
   }
 }
