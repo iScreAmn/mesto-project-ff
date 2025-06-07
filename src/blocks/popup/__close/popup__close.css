@@ -6,7 +6,7 @@
   border: none;
   position: absolute;
   top: -36px;
-  right: -34px;
+  right: -40px;
   -webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
   -ms-transform: rotate(90deg);
@@ -20,4 +20,26 @@
 
 .popup__close:hover {
   opacity: 0.6;
+}
+
+@media screen and (max-width: 768px) {
+  
+}
+
+@media screen and (max-width: 621px) {
+  .popup__close {
+    width: 20px;
+    height: 20px;
+    top: -21px;
+    right: -27px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .popup__close {
+    width: 20px;
+    height: 20px;
+    top: -21px;
+    right: -27px;
+  }
 }

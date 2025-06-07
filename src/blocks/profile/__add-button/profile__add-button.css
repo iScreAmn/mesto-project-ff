@@ -1,7 +1,7 @@
 .profile__add-button {
   width: 150px;
   height: 50px;
-  background: transparent var(--add-icon) center no-repeat;
+  background-color: transparent;
   background-size: 22px;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
@@ -14,6 +14,12 @@
   transition: 0.3s;
   cursor: pointer;
   margin-left: auto;
+}
+
+.profile__add-button i {
+  font-size: 24px;
+  color: var(--text-color);
+  pointer-events: none;
 }
 
 .profile__add-button:hover {
