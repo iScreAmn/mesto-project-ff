@@ -1,12 +1,51 @@
 .profile__image {
   width: 120px;
   height: 120px;
+  position: relative;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   border-radius: 50%;
+  background-image: url('../../../images/avatar.jpg');
   background-size: cover;
   background-position: center;
   margin: 0 29px 0 0;
+  overflow: hidden;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.profile__image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(72, 72, 72, 0);
+  transition: background-color 0.3s ease;
+  z-index: 1;
+}
+
+.profile__image:hover {
+  background-color: rgba(0, 0, 0, 0.588);
+}
+
+.profile__image:hover::after {
+  background-color: rgb(44 43 43 / 73%);;
+}
+
+.profile__icon {
+  position: absolute;
+  top: 43%;
+  left: 40%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 24px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.profile__image:hover .profile__icon {
+  opacity: 1;
 }
 
 @media screen and (max-width: 740px) {

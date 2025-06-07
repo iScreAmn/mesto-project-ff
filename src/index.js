@@ -4,6 +4,7 @@ import avatarImage from "./images/avatar.jpg";
 import { initialCards } from "./components/cards.js";
 import { openModal, closeModal } from "./components/modal.js";
 import { initThemeToggle } from "./components/theme.js";
+import '@fortawesome/fontawesome-free/css/all.css';
 import {
   createCardElement,
   handleDeleteCard,
@@ -19,6 +20,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const profileDescription = document.querySelector(".profile__description");
     profileTitle.textContent = savedProfile.name;
     profileDescription.textContent = savedProfile.description;
+    if (savedProfile.avatar) {
+      profileImageDiv.style.backgroundImage = `url(${savedProfile.avatar})`;
+    }
   }
 });
 
@@ -30,16 +34,19 @@ profileImageDiv.style.backgroundImage = `url(${avatarImage})`;
 const placesList = document.querySelector(".places__list");
 const profileEditButton = document.querySelector(".profile__edit-button");
 const profileAddButton = document.querySelector(".profile__add-button");
+const profileImage = document.querySelector(".profile__image");
 
 const popupEditProfile = document.querySelector(".popup_type_edit");
 const popupNewCard = document.querySelector(".popup_type_new-card");
 const popupImage = document.querySelector(".popup_type_image");
+const popupAvatar = document.querySelector(".popup_type_avatar");
 
 const closeButtonEditProfile = popupEditProfile.querySelector(".popup__close");
 const closeButtonNewCard = popupNewCard.querySelector(".popup__close");
 const closeButtonImage = popupImage
   ? popupImage.querySelector(".popup__close")
   : null;
+const closeButtonAvatar = popupAvatar.querySelector(".popup__close");
 
 // Функция для добавления карточек на страницу
 function renderCards(cards) {
@@ -58,6 +65,17 @@ renderCards(initialCards);
 // События для модального окна добавления
 profileAddButton.addEventListener("click", () => openModal(popupNewCard));
 closeButtonNewCard.addEventListener("click", () => closeModal(popupNewCard));
+// Обработчик закрытия по оверлею для popupNewCard
+popupNewCard.addEventListener("mousedown", (evt) => {
+  if (evt.target === popupNewCard) {
+    closeModal(popupNewCard);
+  }
+});
+
+closeButtonAvatar.addEventListener("click", () => closeModal(popupAvatar));
+if (profileImage && popupAvatar) {
+  profileImage.addEventListener("click", () => openModal(popupAvatar));
+}
 
 // События для модального окна редактирования
 profileEditButton.addEventListener("click", () => {
@@ -145,7 +163,32 @@ if (formNewCard) {
     // Добавляем карточку в начало списка
     placesList.prepend(newCardElement);
 
-    closeModal(popupNewCard); // Закрываем модальное окно после добавления карточки
-    evt.target.reset(); // Очищаем форму после отправки
+    closeModal(popupNewCard);
+    evt.target.reset();
+  });
+}
+
+const formAvatar = popupAvatar.querySelector(".popup__form");
+if (formAvatar) {
+  formAvatar.addEventListener("submit", (evt) => {
+    evt.preventDefault();
+
+    const linkInput = formAvatar.querySelector('input[name="link"]');
+    const link = linkInput?.value.trim();
+
+    if (!link) {
+      console.warn("Поле ссылки не должно быть пустым.");
+      return;
+    }
+
+    profileImageDiv.style.backgroundImage = `url(${link})`;
+
+    saveProfileData({
+      ...loadProfileData(),
+      avatar: link
+    });
+
+    closeModal(popupAvatar);
+    evt.target.reset();
   });
 }

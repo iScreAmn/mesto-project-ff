@@ -19,7 +19,9 @@
     </header>
     <main class="content">
       <section class="profile page__section">
-        <div class="profile__image" style="background-image: url('./images/avatar.jpg');"></div>
+        <div class="profile__image">
+          <i class="fa-solid fa-pen fa-bounce profile__icon"></i>
+        </div>
         <div class="profile__info">
           <h1 class="profile__title">Franklin Haris</h1>
           <button class="profile__edit-button" type="button"></button>
@@ -55,10 +57,8 @@
         <button type="button" class="popup__close"></button>
         <h3 class="popup__title">Новое место</h3>
         <form class="popup__form" name="new-place">
-          <input type="text" name="place-name" class="popup__input popup__input_type_card-name" placeholder="Название"
-            required>
-          <input type="url" name="link" class="popup__input popup__input_type_url" placeholder="Ссылка на картинку"
-            required>
+          <input type="text" name="place-name" class="popup__input popup__input_type_card-name" placeholder="Название" required >
+          <input type="url" name="link" class="popup__input popup__input_type_url" placeholder="Ссылка на картинку" required >
           <button type="submit" class="button popup__button">Сохранить</button>
         </form>
       </div>
@@ -69,6 +69,17 @@
         <img src="https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg" alt=""
           class="popup__image">
         <p class="popup__caption"></p>
+      </div>
+    </div>
+    <div class="popup popup_type_avatar">
+      <div class="popup__content">
+        <button type="button" class="popup__close"></button>
+        <h3 class="popup__title">Обновить аватар</h3>
+        <form class="popup__form" name="new-avatar">
+          <input type="url" name="link" class="popup__input popup__input_type_url" placeholder="Ссылка на аватар"
+            required>
+          <button type="submit" class="button popup__button">Сохранить</button>
+        </form>
       </div>
     </div>
   </div>

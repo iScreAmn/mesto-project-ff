@@ -2,8 +2,8 @@
 .popup.popup_type_new-card {
   display: none;
   /* opacity: 0; */
-  pointer-events: none; /* отключает клики */
-  transition: visibility 0s 0.3s, opacity 0.3s; /* анимация */
+  /* pointer-events: none; */
+  transition: visibility 0s 0.3s, opacity 0.3s;
 }
 
 .popup.popup_type_image {
@@ -13,18 +13,16 @@
 .popup__content {
   max-width: 430px;
   width: 100%;
-  min-height: 330px;
+  min-height: 270px;
   background-color: #fff;
   border-radius: 10px;
   position: relative;
   box-sizing: border-box;
   padding: 34px 36px;
 
-  visibility: visible; /* становится видимым */
-  opacity: 1; /* становится непрозрачным */
-  pointer-events: auto; /* включаем клики */
-  
-  
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 
