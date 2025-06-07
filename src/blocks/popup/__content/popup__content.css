@@ -25,7 +25,9 @@
   pointer-events: auto;
 }
 
-
+.popup__content-delete {
+  min-height: 195px;
+}
 
 @media screen and (max-width: 568px) {
   .popup__content {

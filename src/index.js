@@ -7,7 +7,6 @@ import { initThemeToggle } from "./components/theme.js";
 import '@fortawesome/fontawesome-free/css/all.css';
 import {
   createCardElement,
-  handleDeleteCard,
   handleLikeCard,
 } from "./components/card.js";
 import { saveProfileData, loadProfileData } from './data/storage.js';
@@ -40,6 +39,7 @@ const popupEditProfile = document.querySelector(".popup_type_edit");
 const popupNewCard = document.querySelector(".popup_type_new-card");
 const popupImage = document.querySelector(".popup_type_image");
 const popupAvatar = document.querySelector(".popup_type_avatar");
+const popupDelete = document.querySelector(".popup_type_delete");
 
 const closeButtonEditProfile = popupEditProfile.querySelector(".popup__close");
 const closeButtonNewCard = popupNewCard.querySelector(".popup__close");
@@ -47,13 +47,14 @@ const closeButtonImage = popupImage
   ? popupImage.querySelector(".popup__close")
   : null;
 const closeButtonAvatar = popupAvatar.querySelector(".popup__close");
+const closeButtonDelete = popupDelete.querySelector(".popup__close");
 
 // Функция для добавления карточек на страницу
 function renderCards(cards) {
   cards.forEach((cardData) => {
     const cardElement = createCardElement(
       cardData,
-      handleDeleteCard,
+      null,
       handleLikeCard,
       openImagePopup
     );
@@ -73,6 +74,7 @@ popupNewCard.addEventListener("mousedown", (evt) => {
 });
 
 closeButtonAvatar.addEventListener("click", () => closeModal(popupAvatar));
+closeButtonDelete.addEventListener("click", () => closeModal(popupDelete));
 if (profileImage && popupAvatar) {
   profileImage.addEventListener("click", () => openModal(popupAvatar));
 }
@@ -155,7 +157,7 @@ if (formNewCard) {
     // Создание новой карточки с использованием готовой функции
     const newCardElement = createCardElement(
       newCardData,
-      handleDeleteCard,
+      null,
       handleLikeCard,
       openImagePopup
     );
@@ -169,6 +171,29 @@ if (formNewCard) {
 }
 
 const formAvatar = popupAvatar.querySelector(".popup__form");
+
+const formDelete = popupDelete.querySelector(".popup__form");
+const confirmDeleteButton = popupDelete.querySelector(".popup__button-delete");
+let cardToDelete = null;
+
+// При клике на иконку удаления — сохранить карточку в переменную
+placesList.addEventListener("click", (evt) => {
+  if (evt.target.classList.contains("card__delete-button")) {
+    cardToDelete = evt.target.closest(".card");
+    openModal(popupDelete);
+  }
+});
+
+// Подтверждение удаления
+if (confirmDeleteButton) {
+  confirmDeleteButton.addEventListener("click", () => {
+    if (cardToDelete) {
+      cardToDelete.remove();
+      cardToDelete = null;
+    }
+    closeModal(popupDelete);
+  });
+}
 if (formAvatar) {
   formAvatar.addEventListener("submit", (evt) => {
     evt.preventDefault();
