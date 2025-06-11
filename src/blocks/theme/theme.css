@@ -2,6 +2,7 @@
 :root {
   --background-color: #121212;
   --text-color: #fff;
+  --nav-btn-color: #000;
   --primary-color: #1e90ff;
 
   --shadow-light: #1a1a1a;
@@ -25,6 +26,7 @@
 [data-theme="dark"] {
   --background-color: #fff;
   --text-color: #000;
+  --nav-btn-color: #fff;
   --primary-color: #bb86fc;
 
   --shadow-light: #ffffff;
