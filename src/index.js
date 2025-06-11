@@ -23,6 +23,18 @@ document.addEventListener("DOMContentLoaded", () => {
       profileImageDiv.style.backgroundImage = `url(${savedProfile.avatar})`;
     }
   }
+
+  // underline nav/profile/theme
+  const underlineTargets = [
+    ...document.querySelectorAll(".nav-btn-theme, .nav-btn-profile, .theme-select-light, .theme-select-dark"),
+  ];
+
+  underlineTargets.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      underlineTargets.forEach((el) => el.classList.remove("active"));
+      btn.classList.add("active");
+    });
+  });
 });
 
 // Установите изображение как background-image

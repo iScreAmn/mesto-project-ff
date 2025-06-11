@@ -1,6 +1,7 @@
 @import url('./__logo/header__logo.css');
 
 .header {
+  font-family: 'Inter', Arial, sans-serif;
   min-height: 120px;
   display: flex;
   align-items: center;
@@ -20,6 +21,7 @@
   background: #545454;
   position: absolute;
   left: 50%;
+  top: 99%;
   -webkit-transform: translateX(-50%);
   -moz-transform: translateX(-50%);
   -ms-transform: translateX(-50%);
@@ -155,6 +157,11 @@
   padding: 4px 8px;
   cursor: pointer;
   border: none;
+  transition: all 0.3s ease;
+  opacity: 1;
+  transform: translateY(0);
+  position: relative;
+  overflow: hidden;
 }
 
 .theme-select {
@@ -164,12 +171,33 @@
   text-align: left;
   cursor: pointer;
   color: var(--text-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-btn::before,
+.theme-select::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  height: 1px;
+  width: 100%;
+  background-color: var(--primary-color);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+  
+}
+
+.nav-btn:hover::before,
+.theme-select:hover::before {
+  transform: scaleX(1);
 }
 
 .theme-select-light {
   position: absolute;
   top: 2%;
-  left: -155px;
+  left: -208px;
   border: none;
   background: none;
 }
@@ -177,7 +205,7 @@
 .theme-select-dark {
   position: absolute;
   top: 2%;
-  left: -85px;
+  left: -106px;
   border: none;
   background: none;
 }
@@ -206,16 +234,16 @@
   transform: translateY(-10px);
   pointer-events: none;
   visibility: hidden;
+  transition: all 0.3s ease;
 }
 
 .nav-submenu-theme {
   display: flex;
-  flex-direction: column;
+  width: 35px;
   opacity: 0;
   pointer-events: none;
   transform: translateY(10px);
   transition: all 0.3s ease;
-  gap: 4px;
 }
 
 .nav-submenu-theme.visible {
