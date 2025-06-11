@@ -48,6 +48,11 @@ const closeButtonImage = popupImage
   : null;
 const closeButtonAvatar = popupAvatar.querySelector(".popup__close");
 const closeButtonDelete = popupDelete.querySelector(".popup__close");
+const burgerButton = document.querySelector(".navigation__button");
+const themeBtn = document.querySelector(".nav-btn-theme");
+const profileBtn = document.querySelector(".nav-btn-profile");
+const themeSubmenu = document.querySelector(".nav-submenu-theme");
+const backBtn = document.querySelector(".nav-btn-back");
 
 // Функция для добавления карточек на страницу
 function renderCards(cards) {
@@ -77,6 +82,41 @@ closeButtonAvatar.addEventListener("click", () => closeModal(popupAvatar));
 closeButtonDelete.addEventListener("click", () => closeModal(popupDelete));
 if (profileImage && popupAvatar) {
   profileImage.addEventListener("click", () => openModal(popupAvatar));
+}
+if (burgerButton) {
+  burgerButton.addEventListener("click", () => {
+    burgerButton.classList.toggle("open");
+  });
+}
+
+if (themeBtn && profileBtn && themeSubmenu && backBtn) {
+  themeBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    profileBtn.classList.add("hidden");
+    themeBtn.classList.add("hidden");
+    themeSubmenu.classList.add("visible");
+  });
+
+  backBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    profileBtn.classList.remove("hidden");
+    themeBtn.classList.remove("hidden");
+    themeSubmenu.classList.remove("visible");
+  });
+}
+
+// profileBtn opens profile edit popup with filled values
+if (profileBtn && popupEditProfile && profileEditButton) {
+  profileBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const profileTitle = document.querySelector('.profile__title');
+    const profileDescription = document.querySelector('.profile__description');
+    const nameInput = popupEditProfile.querySelector('input[name="name"]');
+    const descriptionInput = popupEditProfile.querySelector('input[name="description"]');
+    nameInput.value = profileTitle.textContent;
+    descriptionInput.value = profileDescription.textContent;
+    openModal(popupEditProfile);
+  });
 }
 
 // События для модального окна редактирования
@@ -153,6 +193,8 @@ if (formNewCard) {
     }
 
     const newCardData = { name, link };
+
+ 
 
     // Создание новой карточки с использованием готовой функции
     const newCardElement = createCardElement(

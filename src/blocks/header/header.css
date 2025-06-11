@@ -4,9 +4,9 @@
   min-height: 120px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   flex-shrink: 0;
-  gap: clamp(40px, 40vw, 600px);
+  /* gap: clamp(40px, 57vw, 600px); */
   padding: 0 20px;
   box-sizing: border-box;
   /* flex-wrap: wrap; */
@@ -28,16 +28,158 @@
   bottom: 0;
 }
 
-@media screen and (max-width: 768px) {
-  .header {
-    /* flex-direction: column; */
-  }
+
+
+.navigation__button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
 }
 
-@media screen and (max-width: 621px) {
-  .theme {
-    display: none;
-  }
+.navigation__button .wrapper {
+  width: 30px;
+  height: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 330ms ease-out;
+  transform-origin: center center;
+}
+
+.navigation__button .line {
+  background-color: var(--text-color);
+  border-radius: 3px;
+  width: 100%;
+  height: 4px;
+}
+
+.navigation__button .line.half {
+  width: 50%;
+}
+
+.navigation__button.open .wrapper {
+  transform: rotate(-45deg);
+}
+
+.navigation__button.open .wrapper .line.half.start {
+  transform: rotate(-90deg) translateX(4px);
+}
+
+.navigation__button.open .wrapper .line.half.end {
+  transform: rotate(-90deg) translateX(-4px);
+}
+
+
+
+
+/* Бургер-меню (адаптированный SCSS в CSS) */
+.wrapper {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: transform 330ms ease-out;
+  position: relative;
+}
+
+.wrapper .line {
+  background-color: var(--text-color);
+  border-radius: 1px;
+  width: 100%;
+  height: 2px;
+  transition: transform 330ms cubic-bezier(0.54, -0.81, 0.57, 0.57);
+}
+
+.wrapper .line.half {
+  width: 50%;
+}
+
+.wrapper .line.start {
+  transform-origin: right;
+}
+
+.wrapper .line.end {
+  align-self: flex-end;
+  transform-origin: left;
+}
+
+.wrapper.open {
+  transform: rotate(-45deg);
+}
+
+.wrapper.open .line.start {
+  transform: rotate(-90deg) translateX(3px);
+}
+
+.wrapper.open .line.end {
+  transform: rotate(-90deg) translateX(-3px);
+}
+
+.nav-toolbar {
+  display: none;
+  position: relative;
+  position: absolute;
+  top: 71%;
+  left: 45%;
+  padding: 8px;
+  border-radius: 4px;
+  /* background-color: #7c7a7a1a; */
+  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); */
+  gap: 8px;
+  z-index: 20;
+}
+
+.header .navigation__button.open+.nav-toolbar,
+.nav-toolbar.open {
+  display: flex;
+  align-items: center;
+}
+
+.nav-submenu {
+  display: none;
+  flex-direction: column;
+  margin-left: 4px;
+}
+
+.nav-submenu.open {
+  display: flex;
+}
+
+.nav-btn {
+  background: none;
+  color: var(--text-color);
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  border: none;
+}
+
+.theme-select {
+  background: none;
+  border: none;
+  padding: 4px;
+  text-align: left;
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+.theme-select-light {
+  position: absolute;
+  top: 2%;
+  left: -155px;
+  border: none;
+  background: none;
+}
+
+.theme-select-dark {
+  position: absolute;
+  top: 2%;
+  left: -85px;
+  border: none;
+  background: none;
 }
 
 @media screen and (max-width: 480px) {
@@ -48,8 +190,36 @@
   .header::before {
     width: calc(100% + 40px);
   }
+}
 
-  .theme {
-    display: none;
-  }
+/* === Navigation Buttons Animation & Submenu Theme (added) === */
+.nav-btn,
+.theme-select,
+.nav-btn-back {
+  transition: all 0.3s ease;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.nav-toolbar .hidden {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.nav-submenu-theme {
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  gap: 4px;
+}
+
+.nav-submenu-theme.visible {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
 }

@@ -3,6 +3,8 @@ export function initThemeToggle() {
   const html = document.documentElement;
 
   const checkbox = document.querySelector('.switch');
+  const lightBtn = document.querySelector('.theme-select-light');
+  const darkBtn = document.querySelector('.theme-select-dark');
 
   // Получение сохранённой темы из localStorage или системной настройки
   const savedTheme = localStorage.getItem('theme');
@@ -13,6 +15,22 @@ export function initThemeToggle() {
   setTheme(currentTheme);
   if (checkbox) {
     checkbox.checked = currentTheme === 'dark';
+  }
+
+  if (lightBtn) {
+    lightBtn.addEventListener('click', () => {
+      setTheme('light');
+      localStorage.setItem('theme', 'light');
+      if (checkbox) checkbox.checked = false;
+    });
+  }
+
+  if (darkBtn) {
+    darkBtn.addEventListener('click', () => {
+      setTheme('dark');
+      localStorage.setItem('theme', 'dark');
+      if (checkbox) checkbox.checked = true;
+    });
   }
 
   // Обработчик переключения темы
