@@ -27,12 +27,40 @@ export function createCardElement(cardDetails, onDeleteCard, onLikeCard, onImage
   cardImage.src = cardDetails.link;
   cardImage.alt = cardDetails.name;
 
+  const likeCountElement = cardElement.querySelector('.card__like-count');
+  const storedLikes = JSON.parse(localStorage.getItem(`likes_${cardDetails.name}`)) || [];
+  let likes = storedLikes;
+  const userId = localStorage.getItem('userId') || 'defaultUser';
+
+  function updateLikeDisplay() {
+    const count = likes.length;
+
+    if (count > 0) {
+      likeCountElement.textContent = count;
+      likeCountElement.style.display = 'block';
+    } else {
+      likeCountElement.style.display = 'none';
+    }
+
+    likeButton.classList.toggle('card__like-button_is-active', likes.includes(userId));
+  }
+
+  updateLikeDisplay();
+
   if (deleteButton) {
     deleteButton.addEventListener('click', onDeleteCard);
   }
 
   if (likeButton) {
-    likeButton.addEventListener('click', onLikeCard);
+    likeButton.addEventListener('click', () => {
+      if (likes.includes(userId)) {
+        likes = likes.filter(id => id !== userId);
+      } else {
+        likes.push(userId);
+      }
+      localStorage.setItem(`likes_${cardDetails.name}`, JSON.stringify(likes));
+      updateLikeDisplay();
+    });
   }
   
   if (onImageClick && cardImage) {

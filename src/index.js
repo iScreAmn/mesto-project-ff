@@ -12,6 +12,9 @@ import {
 import { saveProfileData, loadProfileData } from './data/storage.js';
 
 document.addEventListener("DOMContentLoaded", () => {
+  if (!localStorage.getItem('userId')) {
+    localStorage.setItem('userId', 'user_' + Math.random().toString(36).substr(2, 9));
+  }
   initThemeToggle();
 
   // Деактивировать кнопку "Сохранить" в форме редактирования профиля, пока все поля не заполнены

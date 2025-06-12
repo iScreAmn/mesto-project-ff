@@ -26,11 +26,13 @@
 
         <div class="nav-submenu nav-submenu-theme">
           <button class="nav-btn nav-btn-back"><i class="fa-solid fa-left-long fa-fade"></i></button>
-          <button data-theme="light" class="theme-select theme-select-light"><i class="fa-solid fa-moon"></i> Тёмная</button>
-          <button data-theme="light" class="theme-select theme-select-dark"><i class="fa-solid fa-sun"></i> Светлая</button>
+          <button data-theme="light" class="theme-select theme-select-light"><i class="fa-solid fa-moon"></i>
+            Тёмная</button>
+          <button data-theme="light" class="theme-select theme-select-dark"><i class="fa-solid fa-sun"></i>
+            Светлая</button>
         </div>
       </div>
-      <div class="theme" style="display: none;" >
+      <div class="theme" style="display: none;">
         <input type="checkbox" name="checkbox" class="switch">
       </div>
     </header>
@@ -117,9 +119,11 @@
       <img class="card__image" src="" alt="" />
       <button type="button" class="card__delete-button"></button>
       <div class="card__description">
-        <h2 class="card__title">
-        </h2>
-        <button type="button" class="card__like-button"></button>
+        <h2 class="card__title"></h2>
+        <div class="card__like-wrapper">
+          <button type="button" class="card__like-button"></button>
+          <span class="card__like-count"></span>
+        </div>
       </div>
     </li>
   </template>
