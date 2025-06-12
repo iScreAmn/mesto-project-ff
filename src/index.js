@@ -58,8 +58,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if (savedProfile) {
     const profileTitle = document.querySelector(".profile__title");
     const profileDescription = document.querySelector(".profile__description");
-    profileTitle.textContent = savedProfile.name;
-    profileDescription.textContent = savedProfile.description;
+    if (savedProfile.name) profileTitle.textContent = savedProfile.name;
+    if (savedProfile.description) profileDescription.textContent = savedProfile.description;
     if (savedProfile.avatar) {
       profileImageDiv.style.backgroundImage = `url(${savedProfile.avatar})`;
     }
@@ -222,6 +222,7 @@ if (formEditProfile) {
     profileTitle.textContent = nameInput.value;
     profileDescription.textContent = descriptionInput.value;
     saveProfileData({
+      ...loadProfileData(),
       name: nameInput.value,
       description: descriptionInput.value
     });
