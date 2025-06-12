@@ -13,6 +13,47 @@ import { saveProfileData, loadProfileData } from './data/storage.js';
 
 document.addEventListener("DOMContentLoaded", () => {
   initThemeToggle();
+
+  // Деактивировать кнопку "Сохранить" в форме редактирования профиля, пока все поля не заполнены
+  const formEdit = document.querySelector('.popup_type_edit .popup__form');
+  const saveProfileBtn = formEdit?.querySelector('.popup__button');
+  const inputsEdit = formEdit ? Array.from(formEdit.querySelectorAll('input[required]')) : [];
+
+  function toggleEditButton() {
+    const allFilled = inputsEdit.every(input => input.value.trim() !== "");
+    if (saveProfileBtn) saveProfileBtn.disabled = !allFilled;
+    if (saveProfileBtn) saveProfileBtn.classList.toggle('disabled', !allFilled);
+  }
+
+  inputsEdit.forEach(input => {
+    input.addEventListener('input', toggleEditButton);
+  });
+  toggleEditButton();
+
+  // Деактивировать кнопку "Сохранить" в форме добавления карточки
+  const formNew = document.querySelector('.popup_type_new-card .popup__form');
+  const saveCardBtn = formNew?.querySelector('.popup__button');
+  const inputsNew = formNew ? Array.from(formNew.querySelectorAll('input[required]')) : [];
+
+  function toggleNewButton() {
+    const allFilled = inputsNew.every(input => input.value.trim() !== "");
+    if (saveCardBtn) saveCardBtn.disabled = !allFilled;
+    if (saveCardBtn) saveCardBtn.classList.toggle('disabled', !allFilled);
+  }
+
+  inputsNew.forEach(input => {
+    input.addEventListener('input', toggleNewButton);
+  });
+  toggleNewButton();
+
+  // Стилизация отключённой кнопки при загрузке
+  if (saveProfileBtn) {
+    saveProfileBtn.classList.toggle('disabled', saveProfileBtn.disabled);
+  }
+  if (saveCardBtn) {
+    saveCardBtn.classList.toggle('disabled', saveCardBtn.disabled);
+  }
+
   const savedProfile = loadProfileData();
   if (savedProfile) {
     const profileTitle = document.querySelector(".profile__title");

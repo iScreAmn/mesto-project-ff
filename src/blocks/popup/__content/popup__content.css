@@ -3,7 +3,7 @@
   display: none;
   /* opacity: 0; */
   /* pointer-events: none; */
-  transition: visibility 0s 0.3s, opacity 0.3s;
+  /* transition: visibility 0s 0.3s, opacity 0.3s; */
 }
 
 .popup.popup_type_image {
