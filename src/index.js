@@ -79,6 +79,26 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.classList.add("active");
     });
   });
+
+  // profile tab switching
+  const profileTabs = [
+    document.querySelector('.profile-tab-image'),
+    document.querySelector('.profile-tab-favorites')
+  ];
+
+  // Set default active tab
+  const defaultActiveTab = document.querySelector('.profile-tab-image');
+  if (defaultActiveTab) {
+    defaultActiveTab.classList.add('active');
+  }
+
+  profileTabs.forEach(tab => {
+    if (!tab) return;
+    tab.addEventListener('click', () => {
+      profileTabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
 });
 
 // Установите изображение как background-image
@@ -124,6 +144,28 @@ function renderCards(cards) {
 }
 // Вызов функции для добавления карточек на страницу при загрузке
 renderCards(initialCards);
+
+// Фильтрация по избранному и изображениям
+const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+const profileTabFavorites = document.querySelector('.profile-tab-favorites');
+const profileTabImages = document.querySelector('.profile-tab-image');
+
+if (profileTabFavorites) {
+  profileTabFavorites.addEventListener('click', () => {
+    const favLinks = JSON.parse(localStorage.getItem('favorites')) || [];
+    placesList.innerHTML = '';
+    const favoriteCards = initialCards.filter(card => favLinks.includes(card.link));
+    renderCards(favoriteCards);
+  });
+}
+
+if (profileTabImages) {
+  profileTabImages.addEventListener('click', () => {
+    placesList.innerHTML = '';
+    renderCards(initialCards);
+  });
+}
 // События для модального окна добавления
 profileAddButton.addEventListener("click", () => openModal(popupNewCard));
 closeButtonNewCard.addEventListener("click", () => closeModal(popupNewCard));

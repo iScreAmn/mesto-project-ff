@@ -239,6 +239,11 @@
   .header::before {
     width: calc(100% + 40px);
   }
+
+  .nav-toolbar {
+    top: 59%;
+    left: 33%;
+  }
 }
 
 /* === Navigation Buttons Animation & Submenu Theme (added) === */

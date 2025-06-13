@@ -22,6 +22,33 @@ export function createCardElement(cardDetails, onDeleteCard, onLikeCard, onImage
   const cardImage = cardElement.querySelector('.card__image');
   const deleteButton = cardElement.querySelector('.card__delete-button');
   const likeButton = cardElement.querySelector('.card__like-button');
+  const favoriteButton = cardElement.querySelector('.card__favorite-button');
+  const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+  const isFavorited = favorites.includes(cardDetails.link);
+
+  if (isFavorited) {
+    favoriteButton.classList.add('is-favorited');
+    favoriteButton.querySelector('i').classList.replace('fa-regular', 'fa-solid');
+  }
+
+  favoriteButton.addEventListener('click', () => {
+    const index = favorites.indexOf(cardDetails.link);
+    const isFavoritesTab = document.querySelector('.profile-tab-favorites')?.classList.contains('active');
+
+    if (index !== -1) {
+      favorites.splice(index, 1);
+      favoriteButton.classList.remove('is-favorited');
+      favoriteButton.querySelector('i').classList.replace('fa-solid', 'fa-regular');
+      if (isFavoritesTab) {
+        cardElement.remove();
+      }
+    } else {
+      favorites.push(cardDetails.link);
+      favoriteButton.classList.add('is-favorited');
+      favoriteButton.querySelector('i').classList.replace('fa-regular', 'fa-solid');
+    }
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+  });
 
   cardTitle.textContent = cardDetails.name;
   cardImage.src = cardDetails.link;
