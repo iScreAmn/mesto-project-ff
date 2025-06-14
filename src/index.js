@@ -1,7 +1,7 @@
 import "./pages/index.css";
 import "./blocks/theme/theme.css";
 import avatarImage from "./images/avatar.jpg";
-import { initialCards } from "./components/cards.js";
+import { initialCards as importedInitialCards } from "./components/cards.js"; // Переименовываем для ясности
 import { openModal, closeModal } from "./components/modal.js";
 import { initThemeToggle } from "./components/theme.js";
 import '@fortawesome/fontawesome-free/css/all.css';
@@ -10,6 +10,8 @@ import {
   handleLikeCard,
 } from "./components/card.js";
 import { saveProfileData, loadProfileData } from './data/storage.js';
+
+let currentCards = [...importedInitialCards]; // Объявляем и инициализируем currentCards в глобальной области видимости модуля
 
 document.addEventListener("DOMContentLoaded", () => {
   if (!localStorage.getItem('userId')) {
@@ -99,6 +101,10 @@ document.addEventListener("DOMContentLoaded", () => {
       tab.classList.add('active');
     });
   });
+
+  // Вызов функции для добавления карточек на страницу при загрузке,
+  // когда DOM гарантированно готов и currentCards доступна.
+  renderCards(currentCards);
 });
 
 // Установите изображение как background-image
@@ -129,24 +135,37 @@ const themeBtn = document.querySelector(".nav-btn-theme");
 const profileBtn = document.querySelector(".nav-btn-profile");
 const themeSubmenu = document.querySelector(".nav-submenu-theme");
 const backBtn = document.querySelector(".nav-btn-back");
+let cardToDelete = null; // Переменная для хранения карточки для удаления
+
+// Функция для обработки удаления карточки из избранного на активной вкладке "Избранное"
+function handleUnfavoriteFromActiveTab(cardLink) {
+  currentCards = currentCards.filter(card => card.link !== cardLink);
+}
+
+// Функция для запроса на удаление карточки (открывает модальное окно)
+function handleCardDeleteRequest(cardElementDOM) {
+  cardToDelete = cardElementDOM; // cardElementDOM - это .places__item
+  openModal(popupDelete);
+}
 
 // Функция для добавления карточек на страницу
-function renderCards(cards) {
-  cards.forEach((cardData) => {
+function renderCards(cardsToRender) {
+  placesList.innerHTML = ''; // Очищаем список перед рендерингом
+  cardsToRender.forEach((cardData) => {
     const cardElement = createCardElement(
       cardData,
-      null,
+      handleCardDeleteRequest, // Передаем обработчик запроса на удаление
       handleLikeCard,
-      openImagePopup
+      openImagePopup,
+      handleUnfavoriteFromActiveTab // Передаем новый обработчик
     );
     placesList.appendChild(cardElement);
   });
 }
-// Вызов функции для добавления карточек на страницу при загрузке
-renderCards(initialCards);
+// Начальный рендеринг карточек перенесен внутрь DOMContentLoaded
 
 // Фильтрация по избранному и изображениям
-const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+// const favorites = JSON.parse(localStorage.getItem('favorites')) || []; // Эта переменная здесь больше не нужна в таком виде
 
 const profileTabFavorites = document.querySelector('.profile-tab-favorites');
 const profileTabImages = document.querySelector('.profile-tab-image');
@@ -154,16 +173,15 @@ const profileTabImages = document.querySelector('.profile-tab-image');
 if (profileTabFavorites) {
   profileTabFavorites.addEventListener('click', () => {
     const favLinks = JSON.parse(localStorage.getItem('favorites')) || [];
-    placesList.innerHTML = '';
-    const favoriteCards = initialCards.filter(card => favLinks.includes(card.link));
+    // Фильтруем из currentCards
+    const favoriteCards = currentCards.filter(card => favLinks.includes(card.link));
     renderCards(favoriteCards);
   });
 }
 
 if (profileTabImages) {
   profileTabImages.addEventListener('click', () => {
-    placesList.innerHTML = '';
-    renderCards(initialCards);
+    renderCards(currentCards); // Отображаем currentCards
   });
 }
 // События для модального окна добавления
@@ -298,13 +316,15 @@ if (formNewCard) {
     // Создание новой карточки с использованием готовой функции
     const newCardElement = createCardElement(
       newCardData,
-      null,
+      handleCardDeleteRequest, // Передаем обработчик запроса на удаление
       handleLikeCard,
-      openImagePopup
+      openImagePopup,
+      handleUnfavoriteFromActiveTab // Передаем новый обработчик
     );
 
     // Добавляем карточку в начало списка
     placesList.prepend(newCardElement);
+    currentCards.unshift(newCardData); // Обновляем currentCards
 
     closeModal(popupNewCard);
     evt.target.reset();
@@ -312,16 +332,18 @@ if (formNewCard) {
 }
 
 const formAvatar = popupAvatar.querySelector(".popup__form");
-
 const formDelete = popupDelete.querySelector(".popup__form");
 const confirmDeleteButton = popupDelete.querySelector(".popup__button-delete");
-let cardToDelete = null;
+let cardLinkToDelete = null; // Теперь cardLinkToDelete хранит ссылку на удаляемое изображение
 
 // При клике на иконку удаления — сохранить карточку в переменную
 placesList.addEventListener("click", (evt) => {
   if (evt.target.classList.contains("card__delete-button")) {
-    cardToDelete = evt.target.closest(".card");
-    openModal(popupDelete);
+    const cardElement = evt.target.closest(".places__item");
+    if (cardElement) {
+      cardLinkToDelete = cardElement.querySelector('.card__image').src; // Сохраняем ссылку на изображение
+      handleCardDeleteRequest(cardElement);
+    }
   }
 });
 
@@ -329,8 +351,37 @@ placesList.addEventListener("click", (evt) => {
 if (confirmDeleteButton) {
   confirmDeleteButton.addEventListener("click", () => {
     if (cardToDelete) {
-      cardToDelete.remove();
+      const cardImageElement = cardToDelete.querySelector('.card__image');      
+      if (cardImageElement) {
+        cardLinkToDelete = cardImageElement.src;
+
+        // Удаляем из списка избранного в localStorage
+        let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+        const favIndex = favorites.indexOf(cardLinkToDelete);
+        if (favIndex !== -1) {
+          favorites.splice(favIndex, 1);
+          localStorage.setItem('favorites', JSON.stringify(favorites));
+        }
+        // Удаляем из текущего массива карточек
+        currentCards = currentCards.filter(card => card.link !== cardLinkToDelete);
+      }
+      cardToDelete.remove(); // Удаляем DOM-элемент карточки
       cardToDelete = null;
+
+      // Перерисовываем активную вкладку
+      const isFavoritesTabActive = profileTabFavorites?.classList.contains('active');
+      const isImagesTabActive = profileTabImages?.classList.contains('active');
+
+      if (isFavoritesTabActive) {
+        // Для вкладки "Избранное" берем актуальный список из localStorage
+        // и фильтруем обновленный currentCards
+        const currentLocalFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
+        const favoriteCardsToRender = currentCards.filter(card => currentLocalFavorites.includes(card.link));
+        renderCards(favoriteCardsToRender);
+      } else if (isImagesTabActive) {
+        // Для вкладки "Все изображения" просто рендерим обновленный currentCards
+        renderCards(currentCards);
+      }
     }
     closeModal(popupDelete);
   });
