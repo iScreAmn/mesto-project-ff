@@ -24,15 +24,16 @@
 
 .popup__button:disabled {
   opacity: 0.5;
-  cursor: not-allowed;
   pointer-events: none;
   background-color: var(--popup-btn-color);
   border: 1px solid #ababab;
   border-radius: 4px;
   color: var(--text-disabled, #888);
   transition: opacity 0.3s ease;
+  cursor: not-allowed;
 }
 
 .popup__button:disabled:hover {
   opacity: 0.5;
 }
+

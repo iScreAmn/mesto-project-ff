@@ -23,32 +23,43 @@ export function createCardElement(cardDetails, onDeleteCard, onLikeCard, onImage
   const deleteButton = cardElement.querySelector('.card__delete-button');
   const likeButton = cardElement.querySelector('.card__like-button');
   const favoriteButton = cardElement.querySelector('.card__favorite-button');
-  const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-  const isFavorited = favorites.includes(cardDetails.link);
 
-  if (isFavorited) {
-    favoriteButton.classList.add('is-favorited');
-    favoriteButton.querySelector('i').classList.replace('fa-regular', 'fa-solid');
+  // Функция для обновления состояния кнопки "избранное"
+  function updateFavoriteButtonState() {
+    const currentFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    const isFavorited = currentFavorites.includes(cardDetails.link);
+    if (favoriteButton) {
+      if (isFavorited) {
+        favoriteButton.classList.add('is-favorited');
+        favoriteButton.querySelector('i').classList.replace('fa-regular', 'fa-solid');
+      } else {
+        favoriteButton.classList.remove('is-favorited');
+        favoriteButton.querySelector('i').classList.replace('fa-solid', 'fa-regular');
+      }
+    }
   }
 
-  favoriteButton.addEventListener('click', () => {
-    const index = favorites.indexOf(cardDetails.link);
-    const isFavoritesTab = document.querySelector('.profile-tab-favorites')?.classList.contains('active');
+  updateFavoriteButtonState(); // Устанавливаем начальное состояние кнопки
 
-    if (index !== -1) {
-      favorites.splice(index, 1);
-      favoriteButton.classList.remove('is-favorited');
-      favoriteButton.querySelector('i').classList.replace('fa-solid', 'fa-regular');
-      if (isFavoritesTab) {
-        cardElement.remove();
+  if (favoriteButton) {
+    favoriteButton.addEventListener('click', () => {
+      // Всегда считываем актуальный список избранного из localStorage
+      let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+      const index = favorites.indexOf(cardDetails.link);
+      const isFavoritesTabActive = document.querySelector('.profile-tab-favorites')?.classList.contains('active');
+
+      if (index !== -1) { // Если было в избранном, удаляем
+        favorites.splice(index, 1);
+        if (isFavoritesTabActive) { // Если мы на вкладке избранного, удаляем карточку из DOM
+          cardElement.remove();
+        }
+      } else { // Если не было в избранном, добавляем
+        favorites.push(cardDetails.link);
       }
-    } else {
-      favorites.push(cardDetails.link);
-      favoriteButton.classList.add('is-favorited');
-      favoriteButton.querySelector('i').classList.replace('fa-regular', 'fa-solid');
-    }
-    localStorage.setItem('favorites', JSON.stringify(favorites));
-  });
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+      updateFavoriteButtonState(); // Обновляем состояние кнопки
+    });
+  }
 
   cardTitle.textContent = cardDetails.name;
   cardImage.src = cardDetails.link;
