@@ -79,7 +79,7 @@
     </div>
     <div class="popup popup_type_delete">
       <div class="popup__content popup__content-delete">
-        <button type="button" class="popup__close"></button>
+        <button type="button" class="popup__close"><i class="fa-solid fa-xmark"></i></button>
         <h3 class="popup__title">Вы уверены?</h3>
         <button type="submit" class="button popup__button popup__button-delete">Удалить</button>
       </div>
@@ -100,9 +100,38 @@
     <div class="popup popup_type_image">
       <div class="popup__content popup__content_content_image">
         <button type="button" class="popup__close"><i class="fa-solid fa-xmark"></i></button>
-        <img src="https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg" alt=""
-          class="popup__image">
-        <p class="popup__caption"></p>
+        
+        <div class="popup__user-header">
+          <div class="popup__user-avatar">
+            <img src="" alt="User Avatar" class="popup__avatar-image">
+          </div>
+          <div class="popup__user-info">
+            <span class="popup__username">Franklin Haris</span>
+          </div>
+        </div>
+        
+        <div class="popup__image-container">
+          <img src="https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg" alt="Serbia" class="popup__image">
+          
+          <div class="popup__image-overlay">
+            <button class="popup-btn popup-btn-next"><i class="popup-next fa-solid fa-circle-chevron-right"></i></button>
+            <button class="popup-btn popup-btn-prev"><i class="popup-prev fa-solid fa-circle-chevron-left"></i></button>
+          </div>
+        </div>
+        
+        <div class="popup__content-area">
+          <div class="popup-icons">
+            <button class="popup-btn popup-btn-like"><i class="fa-regular fa-heart"></i></button>
+            <button class="popup-btn popup-btn-bookmark"><i class="fa-regular fa-bookmark"></i></button>
+            <button class="popup-btn popup-btn-share"><i class="fa-regular fa-paper-plane"></i></button>
+            <button class="popup-btn popup-btn-delete"><i class="fa-solid fa-trash"></i></button>
+          </div>
+          <div class="popup__post-info">
+            <span class="popup__post-username">Franklin Haris</span>
+            <span class="popup__post-title"></span>
+          </div>
+          <p class="popup__caption"></p>
+        </div>
       </div>
     </div>
     <div class="popup popup_type_avatar">

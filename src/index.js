@@ -10,6 +10,7 @@ import {
   handleLikeCard,
 } from "./components/card.js";
 import { saveProfileData, loadProfileData } from './data/storage.js';
+import { initializePopupImageHandlers, openImagePopup } from './components/popup-image.js';
 
 let currentCards = [...importedInitialCards]; // Объявляем и инициализируем currentCards в глобальной области видимости модуля
 
@@ -18,6 +19,12 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem('userId', 'user_' + Math.random().toString(36).substr(2, 9));
   }
   initThemeToggle();
+
+  // Инициализация обработчиков для попапа изображения
+  const popupImage = document.querySelector('.popup_type_image');
+  if (popupImage) {
+    initializePopupImageHandlers(popupImage);
+  }
 
   // Деактивировать кнопку "Сохранить" в форме редактирования профиля, пока все поля не заполнены
   const formEdit = document.querySelector('.popup_type_edit .popup__form');
@@ -249,25 +256,7 @@ closeButtonEditProfile.addEventListener("click", () =>
   closeModal(popupEditProfile)
 );
 
-// Функция открытия модального окна изображения карточки
-function openImagePopup(name, link) {
-  if (popupImage) {
-    const imageElement = popupImage.querySelector(".popup__image");
-    const captionElement = popupImage.querySelector(".popup__caption");
-    if (imageElement && captionElement) {
-      imageElement.src = link;
-      imageElement.alt = name;
-      captionElement.textContent = name;
-      openModal(popupImage);
-    } else {
-      console.error(
-        "Элементы .popup__image или .popup__caption не найдены в попапе изображения."
-      );
-    }
-  } else {
-    console.error("Попап .popup_type_image не найден.");
-  }
-}
+// Функция openImagePopup теперь импортируется из popup-image.js
 
 if (closeButtonImage) {
   closeButtonImage.addEventListener("click", () => closeModal(popupImage));
@@ -350,36 +339,46 @@ placesList.addEventListener("click", (evt) => {
 // Подтверждение удаления
 if (confirmDeleteButton) {
   confirmDeleteButton.addEventListener("click", () => {
-    if (cardToDelete) {
-      const cardImageElement = cardToDelete.querySelector('.card__image');      
+    if (window.cardToDelete) {
+      const cardImageElement = window.cardToDelete.querySelector('.card__image');      
       if (cardImageElement) {
-        cardLinkToDelete = cardImageElement.src;
+        const cardLinkToDelete = cardImageElement.src;
 
-        // Удаляем из списка избранного в localStorage
+        // Удаляем из списка избранного
         let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
         const favIndex = favorites.indexOf(cardLinkToDelete);
         if (favIndex !== -1) {
           favorites.splice(favIndex, 1);
           localStorage.setItem('favorites', JSON.stringify(favorites));
         }
+
+        // Удаляем лайки
+        localStorage.removeItem(`likes_${cardLinkToDelete}`);
+        
         // Удаляем из текущего массива карточек
         currentCards = currentCards.filter(card => card.link !== cardLinkToDelete);
       }
-      cardToDelete.remove(); // Удаляем DOM-элемент карточки
-      cardToDelete = null;
+      
+      // Удаляем DOM-элемент карточки
+      window.cardToDelete.remove();
+      window.cardToDelete = null;
+      window.cardLinkToDelete = null;
+
+      // Закрываем попап изображения, если он открыт
+      const imagePopup = document.querySelector('.popup_type_image');
+      if (imagePopup && imagePopup.classList.contains('popup_is-opened')) {
+        closeModal(imagePopup);
+      }
 
       // Перерисовываем активную вкладку
       const isFavoritesTabActive = profileTabFavorites?.classList.contains('active');
       const isImagesTabActive = profileTabImages?.classList.contains('active');
 
       if (isFavoritesTabActive) {
-        // Для вкладки "Избранное" берем актуальный список из localStorage
-        // и фильтруем обновленный currentCards
         const currentLocalFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
         const favoriteCardsToRender = currentCards.filter(card => currentLocalFavorites.includes(card.link));
         renderCards(favoriteCardsToRender);
       } else if (isImagesTabActive) {
-        // Для вкладки "Все изображения" просто рендерим обновленный currentCards
         renderCards(currentCards);
       }
     }
