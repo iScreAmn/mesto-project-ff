@@ -109,6 +109,28 @@
   pointer-events: auto;
 }
 
+.popup-like-container {
+  position: relative;
+  display: inline-block;
+}
+
+.popup__like-count {
+  position: absolute;
+  top: 75%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--text-color);
+  font-weight: 600;
+  display: none;
+  white-space: nowrap;
+}
+
+.popup__like-count_visible {
+  display: block;
+}
+
 @media screen and (max-width: 600px) {
   .popup__content_content_image {
     width: 400px;

@@ -66,7 +66,7 @@ export function createCardElement(cardDetails, onDeleteCard, onLikeCard, onImage
   cardImage.alt = cardDetails.name;
 
   const likeCountElement = cardElement.querySelector('.card__like-count');
-  const storedLikes = JSON.parse(localStorage.getItem(`likes_${cardDetails.name}`)) || [];
+  const storedLikes = JSON.parse(localStorage.getItem(`likes_${cardDetails.link}`)) || [];
   let likes = storedLikes;
   const userId = localStorage.getItem('userId') || 'defaultUser';
 
@@ -96,8 +96,13 @@ export function createCardElement(cardDetails, onDeleteCard, onLikeCard, onImage
       } else {
         likes.push(userId);
       }
-      localStorage.setItem(`likes_${cardDetails.name}`, JSON.stringify(likes));
+      localStorage.setItem(`likes_${cardDetails.link}`, JSON.stringify(likes));
       updateLikeDisplay();
+      
+      // Импортируем и используем функцию синхронизации
+      import('./popup-image.js').then(module => {
+        module.syncButtonStates(cardDetails.link);
+      });
     });
   }
   

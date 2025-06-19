@@ -84,6 +84,9 @@ function updatePopupImage(cardData) {
     
     if (likeButton) updateLikeButtonState(likeButton, cardData.link);
     if (bookmarkButton) updateBookmarkButtonState(bookmarkButton, cardData.link);
+    
+    // Обновляем счетчик лайков
+    updatePopupLikeCount(cardData.link);
   }
 }
 
@@ -114,6 +117,25 @@ function updateLikeButtonState(likeButton, imageSrc) {
   } else {
     likeButton.querySelector('i').classList.replace('fa-solid', 'fa-regular');
   }
+  
+  // Обновляем счетчик лайков в попапе
+  updatePopupLikeCount(imageSrc);
+}
+
+// Функция для обновления счетчика лайков в попапе
+function updatePopupLikeCount(imageSrc) {
+  const popupLikeCount = document.querySelector('.popup__like-count');
+  if (popupLikeCount) {
+    const likes = JSON.parse(localStorage.getItem(`likes_${imageSrc}`)) || [];
+    if (likes.length > 0) {
+      popupLikeCount.textContent = likes.length;
+      popupLikeCount.style.display = 'block';
+      popupLikeCount.classList.add('popup__like-count_visible');
+    } else {
+      popupLikeCount.style.display = 'none';
+      popupLikeCount.classList.remove('popup__like-count_visible');
+    }
+  }
 }
 
 // Функция для обновления состояния кнопки закладки
@@ -129,7 +151,6 @@ function updateBookmarkButtonState(bookmarkButton, imageSrc) {
 
 // Обработчик клика по кнопке лайка
 export function handlePopupLike(event, imageSrc) {
-  const likeButton = event.currentTarget;
   const userId = localStorage.getItem('userId') || 'defaultUser';
   let likes = JSON.parse(localStorage.getItem(`likes_${imageSrc}`)) || [];
 
@@ -140,34 +161,13 @@ export function handlePopupLike(event, imageSrc) {
   }
 
   localStorage.setItem(`likes_${imageSrc}`, JSON.stringify(likes));
-  updateLikeButtonState(likeButton, imageSrc);
-
-  // Обновляем состояние лайка в карточке на странице
-  const cardImage = document.querySelector(`.card__image[src="${imageSrc}"]`);
-  if (cardImage) {
-    const card = cardImage.closest('.places__item');
-    const cardLikeButton = card.querySelector('.card__like-button');
-    const likeCountElement = card.querySelector('.card__like-count');
-    
-    if (cardLikeButton) {
-      cardLikeButton.classList.toggle('card__like-button_is-active', likes.includes(userId));
-      
-      // Обновляем счетчик лайков
-      if (likeCountElement) {
-        if (likes.length > 0) {
-          likeCountElement.textContent = likes.length;
-          likeCountElement.style.display = 'block';
-        } else {
-          likeCountElement.style.display = 'none';
-        }
-      }
-    }
-  }
+  
+  // Синхронизируем все состояния
+  syncButtonStates(imageSrc);
 }
 
 // Обработчик клика по кнопке закладки
 export function handlePopupBookmark(event, imageSrc) {
-  const bookmarkButton = event.currentTarget;
   let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
   const index = favorites.indexOf(imageSrc);
 
@@ -178,23 +178,9 @@ export function handlePopupBookmark(event, imageSrc) {
   }
 
   localStorage.setItem('favorites', JSON.stringify(favorites));
-  updateBookmarkButtonState(bookmarkButton, imageSrc);
-
-  // Обновляем состояние закладки в карточке на странице
-  const cardImage = document.querySelector(`.card__image[src="${imageSrc}"]`);
-  if (cardImage) {
-    const card = cardImage.closest('.places__item');
-    const cardFavoriteButton = card.querySelector('.card__favorite-button');
-    if (cardFavoriteButton) {
-      if (favorites.includes(imageSrc)) {
-        cardFavoriteButton.classList.add('is-favorited');
-        cardFavoriteButton.querySelector('i').classList.replace('fa-regular', 'fa-solid');
-      } else {
-        cardFavoriteButton.classList.remove('is-favorited');
-        cardFavoriteButton.querySelector('i').classList.replace('fa-solid', 'fa-regular');
-      }
-    }
-  }
+  
+  // Синхронизируем все состояния
+  syncButtonStates(imageSrc);
 }
 
 // Обработчик клика по кнопке удаления
@@ -235,6 +221,9 @@ export function openImagePopup(cardName, cardLink) {
     
     // Обновляем название поста
     updatePopupPostTitle(cardName);
+    
+    // Обновляем счетчик лайков
+    updatePopupLikeCount(cardLink);
     
     // Устанавливаем флаг открытого попапа
     isPopupOpen = true;
@@ -304,4 +293,67 @@ export function initializePopupImageHandlers(popupElement) {
       prevButton.addEventListener('click', handlePrevImage);
     }
   }
+}
+
+// Функция для синхронизации состояния кнопок между попапом и карточками
+export function syncButtonStates(imageSrc) {
+  const userId = localStorage.getItem('userId') || 'defaultUser';
+  const likes = JSON.parse(localStorage.getItem(`likes_${imageSrc}`)) || [];
+  const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+  
+  // Обновляем попап, если он открыт и показывает это изображение
+  const popupImage = document.querySelector('.popup_type_image');
+  if (popupImage && popupImage.classList.contains('popup_is-opened')) {
+    const popupImageElement = popupImage.querySelector('.popup__image');
+    if (popupImageElement && popupImageElement.src === imageSrc) {
+      const popupLikeButton = popupImage.querySelector('.popup-btn-like');
+      const popupBookmarkButton = popupImage.querySelector('.popup-btn-bookmark');
+      
+      if (popupLikeButton) {
+        updateLikeButtonState(popupLikeButton, imageSrc);
+      }
+      if (popupBookmarkButton) {
+        updateBookmarkButtonState(popupBookmarkButton, imageSrc);
+      }
+      
+      // Обновляем счетчик лайков в попапе
+      updatePopupLikeCount(imageSrc);
+    }
+  }
+  
+  // Обновляем все карточки с этим изображением
+  const cardImages = document.querySelectorAll(`.card__image[src="${imageSrc}"]`);
+  cardImages.forEach(cardImage => {
+    const card = cardImage.closest('.places__item');
+    if (card) {
+      const cardLikeButton = card.querySelector('.card__like-button');
+      const likeCountElement = card.querySelector('.card__like-count');
+      const cardFavoriteButton = card.querySelector('.card__favorite-button');
+      
+      // Обновляем лайк
+      if (cardLikeButton) {
+        cardLikeButton.classList.toggle('card__like-button_is-active', likes.includes(userId));
+        
+        if (likeCountElement) {
+          if (likes.length > 0) {
+            likeCountElement.textContent = likes.length;
+            likeCountElement.style.display = 'block';
+          } else {
+            likeCountElement.style.display = 'none';
+          }
+        }
+      }
+      
+      // Обновляем избранное
+      if (cardFavoriteButton) {
+        if (favorites.includes(imageSrc)) {
+          cardFavoriteButton.classList.add('is-favorited');
+          cardFavoriteButton.querySelector('i').classList.replace('fa-regular', 'fa-solid');
+        } else {
+          cardFavoriteButton.classList.remove('is-favorited');
+          cardFavoriteButton.querySelector('i').classList.replace('fa-solid', 'fa-regular');
+        }
+      }
+    }
+  });
 } 

@@ -53,7 +53,7 @@
   gap: 15px;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .popup-icons .popup-btn {
@@ -90,5 +90,10 @@
   left: 1%;
   color: #fff;
   font-size: 20px;
+}
+
+/* Модальное окно подтверждения удаления должно быть поверх других попапов */
+.popup_type_delete {
+  z-index: 20;
 }
 
