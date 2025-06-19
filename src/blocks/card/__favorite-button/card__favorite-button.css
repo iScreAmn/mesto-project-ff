@@ -1,0 +1,31 @@
+.card__favorite-button {
+  width: 18px;
+  height: 18px;
+  background-size: 18px 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  top: 27px;
+  right: 44px;
+  font-size: 18px;
+  color: #fff;
+  padding: 0;
+  margin: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.card:hover .card__favorite-button {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.card__favorite-button.is-favorited {
+  color: #fff;
+}
+
+.card__favorite-button:hover {
+  transform: scale(1.1);
+} 
