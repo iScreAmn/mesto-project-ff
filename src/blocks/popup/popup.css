@@ -5,7 +5,6 @@
 @import url('./__form/popup__form.css');
 @import url('./__input/popup__input.css');
 @import url('./__button/popup__button.css');
-@import url('./__caption/popup__caption.css');
 @import url('./__image/popup__image.css');
 
 .popup {
@@ -35,5 +34,61 @@
 
 .popup__button:disabled:hover {
   opacity: 0.5;
+}
+
+.popup-btn {
+  border: none;
+  background: none;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.popup-btn:hover {
+  opacity: 0.7;
+}
+
+.popup-icons {
+  display: flex;
+  gap: 15px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.popup-icons .popup-btn {
+  font-size: 20px;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.popup-icons .popup-btn:hover {
+  background-color: rgba(128, 128, 128, 0.1);
+}
+
+.popup-icons .popup-btn-delete {
+  color: var(--text-color);
+  margin-left: auto;
+}
+
+.popup-icons .popup-btn-delete:hover {
+  background-color: rgba(128, 128, 128, 0.1);
+}
+
+.popup-next {
+  position: absolute;
+  top: 45%;
+  right: 1%;
+  color: #fff;
+  font-size: 20px;
+}
+
+.popup-prev {
+  position: absolute;
+  top: 45%;
+  left: 1%;
+  color: #fff;
+  font-size: 20px;
 }
 

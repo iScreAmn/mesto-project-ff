@@ -1,3 +1,5 @@
+import { closeImagePopup } from './popup-image.js';
+
 // Функция-обработчик события нажатия Esc (внутренняя)
 function handleEscClose(evt) {
   if (evt.key === 'Escape') {
@@ -31,6 +33,11 @@ export function openModal(popupElement) {
 
 // Функция закрытия модального окна
 export function closeModal(popupElement) {
+  // Проверяем, если закрывается попап изображения
+  if (popupElement && popupElement.classList.contains('popup_type_image')) {
+    closeImagePopup();
+  }
+  
   popupElement.classList.remove('popup_is-opened');
   popupElement.addEventListener('transitionend', function handler(evt) {
     if (evt.propertyName === 'opacity') {

@@ -1,7 +1,7 @@
 export const initialCards = [
   {
-    name: "Norway",
-    link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg",
+    name: "Vietnam",
+    link: "https://cdn.tourradar.com/s3/serp/1536x1552/5032_Gia44gKW.jpg",
   },
   {
     name: "Ukraine",
