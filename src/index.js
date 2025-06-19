@@ -58,12 +58,31 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   toggleNewButton();
 
+  // Деактивировать кнопку "Сохранить" в форме обновления аватара
+  const formAvatar = document.querySelector('.popup_type_avatar .popup__form');
+  const saveAvatarBtn = formAvatar?.querySelector('.popup__button');
+  const inputsAvatar = formAvatar ? Array.from(formAvatar.querySelectorAll('input[required]')) : [];
+
+  function toggleAvatarButton() {
+    const allFilled = inputsAvatar.every(input => input.value.trim() !== "");
+    if (saveAvatarBtn) saveAvatarBtn.disabled = !allFilled;
+    if (saveAvatarBtn) saveAvatarBtn.classList.toggle('disabled', !allFilled);
+  }
+
+  inputsAvatar.forEach(input => {
+    input.addEventListener('input', toggleAvatarButton);
+  });
+  toggleAvatarButton();
+
   // Стилизация отключённой кнопки при загрузке
   if (saveProfileBtn) {
     saveProfileBtn.classList.toggle('disabled', saveProfileBtn.disabled);
   }
   if (saveCardBtn) {
     saveCardBtn.classList.toggle('disabled', saveCardBtn.disabled);
+  }
+  if (saveAvatarBtn) {
+    saveAvatarBtn.classList.toggle('disabled', saveAvatarBtn.disabled);
   }
 
   const savedProfile = loadProfileData();
@@ -202,10 +221,30 @@ popupNewCard.addEventListener("mousedown", (evt) => {
   }
 });
 
-closeButtonAvatar.addEventListener("click", () => closeModal(popupAvatar));
+closeButtonAvatar.addEventListener("click", () => {
+  // Очищаем форму при закрытии
+  const avatarForm = popupAvatar.querySelector('.popup__form');
+  if (avatarForm) {
+    avatarForm.reset();
+  }
+  closeModal(popupAvatar);
+});
 closeButtonDelete.addEventListener("click", () => closeModal(popupDelete));
 if (profileImage && popupAvatar) {
-  profileImage.addEventListener("click", () => openModal(popupAvatar));
+  profileImage.addEventListener("click", () => {
+    // Очищаем форму при открытии
+    const avatarForm = popupAvatar.querySelector('.popup__form');
+    if (avatarForm) {
+      avatarForm.reset();
+      // Деактивируем кнопку после сброса формы
+      const saveAvatarBtn = avatarForm.querySelector('.popup__button');
+      if (saveAvatarBtn) {
+        saveAvatarBtn.disabled = true;
+        saveAvatarBtn.classList.add('disabled');
+      }
+    }
+    openModal(popupAvatar);
+  });
 }
 if (burgerButton) {
   burgerButton.addEventListener("click", () => {
@@ -411,3 +450,15 @@ if (formAvatar) {
     evt.target.reset();
   });
 }
+
+// Обработчик закрытия по оверлею для popupAvatar
+popupAvatar.addEventListener("mousedown", (evt) => {
+  if (evt.target === popupAvatar) {
+    // Очищаем форму при закрытии
+    const avatarForm = popupAvatar.querySelector('.popup__form');
+    if (avatarForm) {
+      avatarForm.reset();
+    }
+    closeModal(popupAvatar);
+  }
+});
