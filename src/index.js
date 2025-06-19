@@ -152,6 +152,7 @@ function handleUnfavoriteFromActiveTab(cardLink) {
 // Функция для запроса на удаление карточки (открывает модальное окно)
 function handleCardDeleteRequest(cardElementDOM) {
   cardToDelete = cardElementDOM; // cardElementDOM - это .places__item
+  window.cardToDelete = cardElementDOM; // Также сохраняем в window для совместимости
   openModal(popupDelete);
 }
 
@@ -331,6 +332,8 @@ placesList.addEventListener("click", (evt) => {
     const cardElement = evt.target.closest(".places__item");
     if (cardElement) {
       cardLinkToDelete = cardElement.querySelector('.card__image').src; // Сохраняем ссылку на изображение
+      cardToDelete = cardElement; // Сохраняем карточку для глобального доступа
+      window.cardToDelete = cardElement; // Также сохраняем в window для совместимости
       handleCardDeleteRequest(cardElement);
     }
   }
