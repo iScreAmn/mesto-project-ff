@@ -19,6 +19,19 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem('userId', 'user_' + Math.random().toString(36).substr(2, 9));
   }
   initThemeToggle();
+  
+  // Установка активной темы при загрузке
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  
+  // Устанавливаем активную тему в меню
+  setTimeout(() => {
+    const activeOption = document.querySelector(`.theme-option-${savedTheme}`);
+    if (activeOption) {
+      document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove("active"));
+      activeOption.classList.add("active");
+    }
+  }, 100);
 
   // Инициализация обработчиков для попапа изображения
   const popupImage = document.querySelector('.popup_type_image');
@@ -108,22 +121,31 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // profile tab switching
+  // profile tab switching with smooth animation
   const profileTabs = [
     document.querySelector('.profile-tab-image'),
     document.querySelector('.profile-tab-favorites')
   ];
 
-  // Set default active tab
-  const defaultActiveTab = document.querySelector('.profile-tab-image');
-  if (defaultActiveTab) {
-    defaultActiveTab.classList.add('active');
+  // Set default active tab and reset to images on page load
+  const profileTabImage = document.querySelector('.profile-tab-image');
+  const profileTabFavs = document.querySelector('.profile-tab-favorites');
+  
+  // Всегда сбрасываем на вкладку изображений при загрузке страницы
+  if (profileTabImage && profileTabFavs) {
+    profileTabFavs.classList.remove('active');
+    profileTabImage.classList.add('active');
   }
 
   profileTabs.forEach(tab => {
     if (!tab) return;
-    tab.addEventListener('click', () => {
+    tab.addEventListener('click', (e) => {
+      e.preventDefault();
+      
+      // Убираем активный класс со всех вкладок
       profileTabs.forEach(t => t.classList.remove('active'));
+      
+      // Добавляем активный класс к нажатой вкладке сразу
       tab.classList.add('active');
     });
   });
@@ -157,10 +179,13 @@ const closeButtonImage = popupImage
 const closeButtonAvatar = popupAvatar.querySelector(".popup__close");
 const closeButtonDelete = popupDelete.querySelector(".popup__close");
 const burgerButton = document.querySelector(".navigation__button");
-const themeBtn = document.querySelector(".nav-btn-theme");
-const profileBtn = document.querySelector(".nav-btn-profile");
+const dropdownOverlay = document.querySelector(".dropdown-overlay");
+const dropdownClose = document.querySelector(".dropdown-close");
+const navItemProfile = document.querySelector(".nav-item-profile");
+const navItemTheme = document.querySelector(".nav-item-theme");
 const themeSubmenu = document.querySelector(".nav-submenu-theme");
-const backBtn = document.querySelector(".nav-btn-back");
+const navBack = document.querySelector(".nav-back");
+const themeOptions = document.querySelectorAll(".theme-option");
 let cardToDelete = null; // Переменная для хранения карточки для удаления
 
 // Функция для обработки удаления карточки из избранного на активной вкладке "Избранное"
@@ -199,6 +224,10 @@ const profileTabImages = document.querySelector('.profile-tab-image');
 
 if (profileTabFavorites) {
   profileTabFavorites.addEventListener('click', () => {
+    // Переключаем активную вкладку
+    document.querySelector('.profile-tab-image').classList.remove('active');
+    profileTabFavorites.classList.add('active');
+    
     const favLinks = JSON.parse(localStorage.getItem('favorites')) || [];
     // Фильтруем из currentCards
     const favoriteCards = currentCards.filter(card => favLinks.includes(card.link));
@@ -208,6 +237,10 @@ if (profileTabFavorites) {
 
 if (profileTabImages) {
   profileTabImages.addEventListener('click', () => {
+    // Переключаем активную вкладку
+    document.querySelector('.profile-tab-favorites').classList.remove('active');
+    profileTabImages.classList.add('active');
+    
     renderCards(currentCards); // Отображаем currentCards
   });
 }
@@ -246,41 +279,95 @@ if (profileImage && popupAvatar) {
     openModal(popupAvatar);
   });
 }
-if (burgerButton) {
-  burgerButton.addEventListener("click", () => {
+// Современное выпадающее меню
+if (burgerButton && dropdownOverlay) {
+  // Открытие меню
+  burgerButton.addEventListener("click", (e) => {
+    e.stopPropagation();
     burgerButton.classList.toggle("open");
+    dropdownOverlay.classList.toggle("open");
+    document.body.style.overflow = dropdownOverlay.classList.contains("open") ? "hidden" : "";
+  });
+
+  // Закрытие меню по клику на кнопку закрытия
+  if (dropdownClose) {
+    dropdownClose.addEventListener("click", () => {
+      closeDropdownMenu();
+    });
+  }
+
+  // Закрытие меню по клику на оверлей
+  dropdownOverlay.addEventListener("click", (e) => {
+    if (e.target === dropdownOverlay) {
+      closeDropdownMenu();
+    }
+  });
+
+  // Закрытие меню по ESC
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && dropdownOverlay.classList.contains("open")) {
+      closeDropdownMenu();
+    }
   });
 }
 
-if (themeBtn && profileBtn && themeSubmenu && backBtn) {
-  themeBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    profileBtn.classList.add("hidden");
-    themeBtn.classList.add("hidden");
-    themeSubmenu.classList.add("visible");
-  });
-
-  backBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    profileBtn.classList.remove("hidden");
-    themeBtn.classList.remove("hidden");
-    themeSubmenu.classList.remove("visible");
-  });
+// Функция закрытия меню
+function closeDropdownMenu() {
+  burgerButton.classList.remove("open");
+  dropdownOverlay.classList.remove("open");
+  themeSubmenu.classList.remove("open");
+  document.body.style.overflow = "";
 }
 
-// profileBtn opens profile edit popup with filled values
-if (profileBtn && popupEditProfile && profileEditButton) {
-  profileBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const profileTitle = document.querySelector('.profile__title');
-    const profileDescription = document.querySelector('.profile__description');
+// Обработчики навигации
+if (navItemProfile) {
+  navItemProfile.addEventListener("click", () => {
+    // Открываем попап редактирования профиля
+    const profileTitle = document.querySelector(".profile__title");
+    const profileDescription = document.querySelector(".profile__description");
     const nameInput = popupEditProfile.querySelector('input[name="name"]');
     const descriptionInput = popupEditProfile.querySelector('input[name="description"]');
     nameInput.value = profileTitle.textContent;
     descriptionInput.value = profileDescription.textContent;
+    
+    closeDropdownMenu();
     openModal(popupEditProfile);
   });
 }
+
+if (navItemTheme && themeSubmenu) {
+  navItemTheme.addEventListener("click", () => {
+    themeSubmenu.classList.add("open");
+  });
+}
+
+if (navBack && themeSubmenu) {
+  navBack.addEventListener("click", () => {
+    themeSubmenu.classList.remove("open");
+  });
+}
+
+// Обработчики выбора темы
+themeOptions.forEach(option => {
+  option.addEventListener("click", () => {
+    const theme = option.getAttribute("data-theme");
+    
+    // Переключаем тему
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    
+    // Убираем активный класс со всех опций
+    themeOptions.forEach(opt => opt.classList.remove("active"));
+    // Добавляем активный класс к выбранной опции
+    option.classList.add("active");
+    
+    console.log(`Тема переключена на: ${theme}`);
+    
+    // Меню остается открытым после выбора темы
+  });
+});
+
+// Старый обработчик profileBtn удален, используется новый в dropdown menu
 
 // События для модального окна редактирования
 profileEditButton.addEventListener("click", () => {

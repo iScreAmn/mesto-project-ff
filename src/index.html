@@ -14,28 +14,80 @@
     <header class="header page__section">
       <div class="header__logo"></div>
       <button type="button" class="navigation__button" aria-label="Toggle menu">
-        <div class="wrapper">
-          <span class="line half start"></span>
-          <span class="line"></span>
-          <span class="line half end"></span>
+        <div class="hamburger">
+          <span class="hamburger__line"></span>
+          <span class="hamburger__line"></span>
+          <span class="hamburger__line"></span>
         </div>
       </button>
-      <div class="nav-toolbar">
-        <button class="nav-btn nav-btn-theme"><i class="fa-solid fa-gear"></i> Тема</button>
-        <button class="nav-btn nav-btn-profile"><i class="fa-solid fa-address-card"></i> Профиль</button>
-
-        <div class="nav-submenu nav-submenu-theme">
-          <button class="nav-btn-back"><i class="fa-solid fa-left-long fa-fade"></i></button>
-          <button data-theme="light" class="theme-select theme-select-light"><i class="fa-solid fa-moon"></i>
-            Тёмная</button>
-          <button data-theme="light" class="theme-select theme-select-dark"><i class="fa-solid fa-sun"></i>
-            Светлая</button>
-        </div>
-      </div>
-      <div class="theme" style="display: none;">
-        <input type="checkbox" name="checkbox" class="switch">
-      </div>
     </header>
+    
+    <!-- Современное выпадающее меню -->
+    <div class="dropdown-overlay">
+      <div class="dropdown-menu">
+        <div class="dropdown-header">
+          <!-- <h3 class="dropdown-title">меню</h3> -->
+          <button class="dropdown-close" aria-label="Close menu">
+            <i class="fa-solid fa-caret-down"></i>
+          </button>
+        </div>
+        <nav class="dropdown-nav">
+          <div class="nav-section">
+            <button class="nav-item nav-item-profile">
+              <div class="nav-item-icon">
+                <i class="fa-solid fa-user"></i>
+              </div>
+              <div class="nav-item-content">
+                <span class="nav-item-title">Профиль</span>
+                <span class="nav-item-description">Редактировать профиль</span>
+              </div>
+              <i class="fa-solid fa-chevron-right nav-item-arrow"></i>
+            </button>
+            
+            <button class="nav-item nav-item-theme">
+              <div class="nav-item-icon">
+                <i class="fa-solid fa-palette"></i>
+              </div>
+              <div class="nav-item-content">
+                <span class="nav-item-title">Тема</span>
+                <span class="nav-item-description">Светлая / Тёмная</span>
+              </div>
+              <i class="fa-solid fa-chevron-right nav-item-arrow"></i>
+            </button>
+          </div>
+          
+          <!-- Подменю для темы -->
+          <div class="nav-submenu nav-submenu-theme">
+            <button class="nav-back">
+              <i class="fa-solid fa-caret-left"></i>
+              <!-- <span>назад</span> -->
+            </button>
+            <div class="theme-options">
+              <button class="theme-option theme-option-dark" data-theme="dark">
+                <div class="theme-option-icon">
+                  <i class="fa-solid fa-moon"></i>
+                </div>
+                <div class="theme-option-content">
+                  <span class="theme-option-title-light">Светлая тема</span>
+                  <span class="theme-option-description">Классический светлый интерфейс</span>
+                </div>
+                <div class="theme-option-indicator"></div>
+              </button>
+              <button class="theme-option theme-option-light" data-theme="light">
+                <div class="theme-option-icon">
+                  <i class="fa-solid fa-sun"></i>
+                </div>
+                <div class="theme-option-content">
+                  <span class="theme-option-title">Тёмная тема</span>
+                  <span class="theme-option-description">Тёмный интерфейс для комфорта глаз</span>
+                </div>
+                <div class="theme-option-indicator"></div>
+              </button>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div>
     <main class="content">
       <section class="profile page__section">
         <div class="profile__image">
