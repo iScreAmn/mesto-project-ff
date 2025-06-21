@@ -180,8 +180,16 @@
         <form class="popup__form" name="new-place">
           <input type="text" name="place-name" class="popup__input popup__input_type_card-name" data-i18n="forms.place_name_placeholder" placeholder="Название"
             required>
-          <input type="url" name="link" class="popup__input popup__input_type_url" data-i18n="forms.image_link_placeholder" placeholder="Ссылка на картинку"
-            required>
+          
+          <div class="popup__file-upload">
+            <input type="file" name="image-file" id="place-image-upload" class="popup__file-input" accept="image/*" required>
+            <label for="place-image-upload" class="popup__file-label">
+              <i class="fa-solid fa-cloud-upload-alt"></i>
+              <span data-i18n="forms.upload_image">Загрузить изображение</span>
+            </label>
+            <div class="popup__image-preview" id="place-image-preview"></div>
+          </div>
+          
           <button type="submit" class="button popup__button" data-i18n="forms.save">Сохранить</button>
         </form>
       </div>
@@ -231,8 +239,15 @@
         <button type="button" class="popup__close"><i class="fa-solid fa-xmark"></i></button>
         <h3 class="popup__title" data-i18n="modals.update_avatar">Обновить аватар</h3>
         <form class="popup__form" name="new-avatar">
-          <input type="url" name="link" class="popup__input popup__input_type_url" data-i18n="forms.avatar_link_placeholder" placeholder="Ссылка на аватар"
-            required>
+          <div class="popup__file-upload">
+            <input type="file" name="avatar-file" id="avatar-upload" class="popup__file-input" accept="image/*" required>
+            <label for="avatar-upload" class="popup__file-label">
+              <i class="fa-solid fa-user-circle"></i>
+              <span data-i18n="forms.upload_avatar">Загрузить аватар</span>
+            </label>
+            <div class="popup__image-preview" id="avatar-preview"></div>
+          </div>
+          
           <button type="submit" class="button popup__button" data-i18n="forms.save">Сохранить</button>
         </form>
       </div>

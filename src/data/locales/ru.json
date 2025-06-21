@@ -35,8 +35,10 @@
     "name_placeholder": "Имя",
     "description_placeholder": "Занятие",
     "place_name_placeholder": "Название",
-    "image_link_placeholder": "Ссылка на картинку",
-    "avatar_link_placeholder": "Ссылка на аватар"
+    "upload_image": "Загрузить изображение",
+    "upload_avatar": "Загрузить аватар",
+    "file_selected": "Файл выбран",
+    "no_file_selected": "Файл не выбран"
   },
   "modals": {
     "edit_profile": "Редактировать профиль",

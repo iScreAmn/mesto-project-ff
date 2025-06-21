@@ -35,8 +35,10 @@
     "name_placeholder": "Name",
     "description_placeholder": "About",
     "place_name_placeholder": "Title",
-    "image_link_placeholder": "Image URL",
-    "avatar_link_placeholder": "Avatar URL"
+    "upload_image": "Upload Image",
+    "upload_avatar": "Upload Avatar",
+    "file_selected": "File selected",
+    "no_file_selected": "No file selected"
   },
   "modals": {
     "edit_profile": "Edit Profile",

@@ -5,6 +5,7 @@ import { initialCards as importedInitialCards } from "./components/cards.js"; //
 import { openModal, closeModal } from "./components/modal.js";
 import { initThemeToggle } from "./components/theme.js";
 import { initI18n } from "./components/i18n.js";
+import { initFileUpload, getImageBase64, hasFile } from "./components/file-upload.js";
 import '@fortawesome/fontawesome-free/css/all.css';
 import {
   createCardElement,
@@ -23,6 +24,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Инициализируем системы
   initThemeToggle();
   await initI18n();
+  initFileUpload();
 
   // Инициализация обработчиков для попапа изображения
   const popupImage = document.querySelector('.popup_type_image');
@@ -52,30 +54,49 @@ document.addEventListener("DOMContentLoaded", async () => {
   const inputsNew = formNew ? Array.from(formNew.querySelectorAll('input[required]')) : [];
 
   function toggleNewButton() {
-    const allFilled = inputsNew.every(input => input.value.trim() !== "");
-    if (saveCardBtn) saveCardBtn.disabled = !allFilled;
-    if (saveCardBtn) saveCardBtn.classList.toggle('disabled', !allFilled);
+    const nameInput = formNew?.querySelector('input[name="place-name"]');
+    const imageInput = formNew?.querySelector('input[name="image-file"]');
+    
+    const nameValid = nameInput?.value.trim() !== "";
+    const imageValid = imageInput?.files.length > 0;
+    const allValid = nameValid && imageValid;
+    
+    if (saveCardBtn) saveCardBtn.disabled = !allValid;
+    if (saveCardBtn) saveCardBtn.classList.toggle('disabled', !allValid);
   }
 
-  inputsNew.forEach(input => {
-    input.addEventListener('input', toggleNewButton);
-  });
+  // Обработчик для текстового поля
+  const nameInput = formNew?.querySelector('input[name="place-name"]');
+  if (nameInput) {
+    nameInput.addEventListener('input', toggleNewButton);
+  }
+  
+  // Обработчик для файлового поля (будет вызываться из file-upload.js)
+  const imageInput = formNew?.querySelector('input[name="image-file"]');
+  if (imageInput) {
+    imageInput.addEventListener('change', toggleNewButton);
+  }
+  
   toggleNewButton();
 
   // Деактивировать кнопку "Сохранить" в форме обновления аватара
   const formAvatar = document.querySelector('.popup_type_avatar .popup__form');
   const saveAvatarBtn = formAvatar?.querySelector('.popup__button');
-  const inputsAvatar = formAvatar ? Array.from(formAvatar.querySelectorAll('input[required]')) : [];
 
   function toggleAvatarButton() {
-    const allFilled = inputsAvatar.every(input => input.value.trim() !== "");
-    if (saveAvatarBtn) saveAvatarBtn.disabled = !allFilled;
-    if (saveAvatarBtn) saveAvatarBtn.classList.toggle('disabled', !allFilled);
+    const avatarInput = formAvatar?.querySelector('input[name="avatar-file"]');
+    const avatarValid = avatarInput?.files.length > 0;
+    
+    if (saveAvatarBtn) saveAvatarBtn.disabled = !avatarValid;
+    if (saveAvatarBtn) saveAvatarBtn.classList.toggle('disabled', !avatarValid);
   }
 
-  inputsAvatar.forEach(input => {
-    input.addEventListener('input', toggleAvatarButton);
-  });
+  // Обработчик для файлового поля аватара
+  const avatarFileInput = formAvatar?.querySelector('input[name="avatar-file"]');
+  if (avatarFileInput) {
+    avatarFileInput.addEventListener('change', toggleAvatarButton);
+  }
+  
   toggleAvatarButton();
 
   // Стилизация отключённой кнопки при загрузке
@@ -233,10 +254,36 @@ if (profileTabImages) {
 }
 // События для модального окна добавления
 profileAddButton.addEventListener("click", () => openModal(popupNewCard));
-closeButtonNewCard.addEventListener("click", () => closeModal(popupNewCard));
+closeButtonNewCard.addEventListener("click", () => {
+  // Очищаем форму при закрытии
+  const newCardForm = popupNewCard.querySelector('.popup__form');
+  if (newCardForm) {
+    newCardForm.reset();
+  }
+  
+  // Очищаем превью изображения
+  const preview = document.getElementById('place-image-preview');
+  const uploadContainer = document.querySelector('.popup_type_new-card .popup__file-upload');
+  if (preview) preview.classList.remove('has-image');
+  if (uploadContainer) uploadContainer.classList.remove('has-file');
+  
+  closeModal(popupNewCard);
+});
 // Обработчик закрытия по оверлею для popupNewCard
 popupNewCard.addEventListener("mousedown", (evt) => {
   if (evt.target === popupNewCard) {
+    // Очищаем форму при закрытии
+    const newCardForm = popupNewCard.querySelector('.popup__form');
+    if (newCardForm) {
+      newCardForm.reset();
+    }
+    
+    // Очищаем превью изображения
+    const preview = document.getElementById('place-image-preview');
+    const uploadContainer = document.querySelector('.popup_type_new-card .popup__file-upload');
+    if (preview) preview.classList.remove('has-image');
+    if (uploadContainer) uploadContainer.classList.remove('has-file');
+    
     closeModal(popupNewCard);
   }
 });
@@ -382,19 +429,17 @@ if (formNewCard) {
     evt.preventDefault();
 
     const nameInput = formNewCard.querySelector('input[name="place-name"]');
-    const linkInput = formNewCard.querySelector('input[name="link"]');
-
     const name = nameInput?.value.trim();
-    const link = linkInput?.value.trim();
+    
+    // Получаем base64 изображения
+    const imageBase64 = getImageBase64('place-image-upload');
 
-    if (!name || !link) {
+    if (!name || !imageBase64) {
       console.warn("Поля формы не должны быть пустыми.");
       return;
     }
 
-    const newCardData = { name, link };
-
- 
+    const newCardData = { name, link: imageBase64 };
 
     // Создание новой карточки с использованием готовой функции
     const newCardElement = createCardElement(
@@ -411,6 +456,12 @@ if (formNewCard) {
 
     closeModal(popupNewCard);
     evt.target.reset();
+    
+    // Очищаем превью изображения
+    const preview = document.getElementById('place-image-preview');
+    const uploadContainer = document.querySelector('.popup_type_new-card .popup__file-upload');
+    if (preview) preview.classList.remove('has-image');
+    if (uploadContainer) uploadContainer.classList.remove('has-file');
   });
 }
 
@@ -485,23 +536,29 @@ if (formAvatar) {
   formAvatar.addEventListener("submit", (evt) => {
     evt.preventDefault();
 
-    const linkInput = formAvatar.querySelector('input[name="link"]');
-    const link = linkInput?.value.trim();
+    // Получаем base64 аватара
+    const avatarBase64 = getImageBase64('avatar-upload');
 
-    if (!link) {
-      console.warn("Поле ссылки не должно быть пустым.");
+    if (!avatarBase64) {
+      console.warn("Необходимо выбрать изображение для аватара.");
       return;
     }
 
-    profileImageDiv.style.backgroundImage = `url(${link})`;
+    profileImageDiv.style.backgroundImage = `url(${avatarBase64})`;
 
     saveProfileData({
       ...loadProfileData(),
-      avatar: link
+      avatar: avatarBase64
     });
 
     closeModal(popupAvatar);
     evt.target.reset();
+    
+    // Очищаем превью изображения
+    const preview = document.getElementById('avatar-preview');
+    const uploadContainer = document.querySelector('.popup_type_avatar .popup__file-upload');
+    if (preview) preview.classList.remove('has-image');
+    if (uploadContainer) uploadContainer.classList.remove('has-file');
   });
 }
 
@@ -513,6 +570,13 @@ popupAvatar.addEventListener("mousedown", (evt) => {
     if (avatarForm) {
       avatarForm.reset();
     }
+    
+    // Очищаем превью изображения
+    const preview = document.getElementById('avatar-preview');
+    const uploadContainer = document.querySelector('.popup_type_avatar .popup__file-upload');
+    if (preview) preview.classList.remove('has-image');
+    if (uploadContainer) uploadContainer.classList.remove('has-file');
+    
     closeModal(popupAvatar);
   }
 });

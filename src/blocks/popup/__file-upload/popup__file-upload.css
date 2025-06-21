@@ -1,0 +1,127 @@
+/* Файловый загрузчик */
+.popup__file-upload {
+  margin: 20px 0;
+  position: relative;
+}
+
+.popup__file-input {
+  display: none;
+}
+
+.popup__file-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  border: 2px dashed rgba(128, 128, 128, 0.4);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: rgba(128, 128, 128, 0.05);
+  color: #000;
+  gap: 12px;
+}
+
+.popup__file-label:hover {
+  border-color: #667eea;
+  background-color: rgba(102, 126, 234, 0.1);
+}
+
+.popup__file-label i {
+  font-size: 48px;
+  color: rgba(128, 128, 128, 0.6);
+  transition: color 0.3s ease;
+}
+
+.popup__file-label:hover i {
+  color: #667eea;
+}
+
+.popup__file-label span {
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Превью изображения */
+.popup__image-preview {
+  margin-top: 16px;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  display: none;
+}
+
+.popup__image-preview.has-image {
+  display: block;
+}
+
+.popup__image-preview img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.popup__image-preview-remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: #e74c3c;
+  transition: all 0.3s ease;
+}
+
+.popup__image-preview-remove:hover {
+  background: #e74c3c;
+  color: white;
+}
+
+/* Состояние с выбранным файлом */
+.popup__file-upload.has-file .popup__file-label {
+  border-color: #27ae60;
+  background-color: rgba(39, 174, 96, 0.1);
+}
+
+.popup__file-upload.has-file .popup__file-label i {
+  color: #27ae60;
+}
+
+/* Состояние ошибки */
+.popup__file-upload.error .popup__file-label {
+  border-color: #e74c3c;
+  background-color: rgba(231, 76, 60, 0.1);
+}
+
+.popup__file-upload.error .popup__file-label i {
+  color: #e74c3c;
+}
+
+/* Адаптивность */
+@media screen and (max-width: 480px) {
+  .popup__file-label {
+    padding: 30px 15px;
+  }
+  
+  .popup__file-label i {
+    font-size: 36px;
+  }
+  
+  .popup__file-label span {
+    font-size: 14px;
+  }
+  
+  .popup__image-preview img {
+    height: 150px;
+  }
+} 
