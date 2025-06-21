@@ -1,33 +1,9 @@
 /* Светлая тема */
-:root {
-  --background-color: #121212;
-  --text-color: #fff;
-  --popup-btn-color: #fff;
-
-  --primary-color: #1e90ff;
-
-  --shadow-light: #1a1a1a;
-  --shadow-dark: #000000;
-
-  --logo-image: url('../../images/icons/mestoLogo2-dark.webp');
-  --add-icon: url('../../images/icons/add-icon-dark.webp');
-  --edit-icon: url('../../images/icons/edit-icon-dark.webp');
-  --border-color: #fff;
-
-  --hue: 223;
-  --bg: hsl(var(--hue), 10%, 100%);
-  --fg: hsl(var(--hue), 10%, 0%);
-  --primary: hsl(var(--hue), 90%, 55%);
-  --primaryT: hsla(var(--hue), 90%, 55%, 0);
-  --transDur: 0.3s;
-
-}
-
-/* Тёмная тема */
-[data-theme="dark"] {
+[data-theme="light"] {
   --background-color: #fff;
   --text-color: #000;
   --popup-btn-color: #121212;
+
   --primary-color: #bb86fc;
 
   --shadow-light: #ffffff;
@@ -37,6 +13,29 @@
   --add-icon: url('../../images/icons/add-icon-white.webp');
   --edit-icon: url('../../images/icons/edit-icon-white.webp');
   --border-color: #000;
+
+  --hue: 223;
+  --bg: hsl(var(--hue), 10%, 100%);
+  --fg: hsl(var(--hue), 10%, 0%);
+  --primary: hsl(var(--hue), 90%, 55%);
+  --primaryT: hsla(var(--hue), 90%, 55%, 0);
+  --transDur: 0.3s;
+}
+
+/* Тёмная тема */
+[data-theme="dark"] {
+  --background-color: #121212;
+  --text-color: #fff;
+  --popup-btn-color: #fff;
+  --primary-color: #1e90ff;
+
+  --shadow-light: #1a1a1a;
+  --shadow-dark: #000000;
+
+  --logo-image: url('../../images/icons/mestoLogo2-dark.webp');
+  --add-icon: url('../../images/icons/add-icon-dark.webp');
+  --edit-icon: url('../../images/icons/edit-icon-dark.webp');
+  --border-color: #fff;
 }
 
 body {

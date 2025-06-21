@@ -38,8 +38,8 @@
                 <i class="fa-solid fa-user"></i>
               </div>
               <div class="nav-item-content">
-                <span class="nav-item-title">Профиль</span>
-                <span class="nav-item-description">Редактировать профиль</span>
+                <span class="nav-item-title" data-i18n="navigation.profile">Профиль</span>
+                <span class="nav-item-description" data-i18n="navigation.profile_desc">Редактировать профиль</span>
               </div>
               <i class="fa-solid fa-chevron-right nav-item-arrow"></i>
             </button>
@@ -49,8 +49,19 @@
                 <i class="fa-solid fa-palette"></i>
               </div>
               <div class="nav-item-content">
-                <span class="nav-item-title">Тема</span>
-                <span class="nav-item-description">Светлая / Тёмная</span>
+                <span class="nav-item-title" data-i18n="navigation.theme">Тема</span>
+                <span class="nav-item-description" data-i18n="navigation.theme_desc">Светлая / Тёмная</span>
+              </div>
+              <i class="fa-solid fa-chevron-right nav-item-arrow"></i>
+            </button>
+            
+            <button class="nav-item nav-item-language">
+              <div class="nav-item-icon">
+                <i class="fa-solid fa-globe"></i>
+              </div>
+              <div class="nav-item-content">
+                <span class="nav-item-title" data-i18n="navigation.language">Язык</span>
+                <span class="nav-item-description" data-i18n="navigation.language_desc">Русский / English</span>
               </div>
               <i class="fa-solid fa-chevron-right nav-item-arrow"></i>
             </button>
@@ -60,28 +71,54 @@
           <div class="nav-submenu nav-submenu-theme">
             <button class="nav-back">
               <i class="fa-solid fa-caret-left"></i>
-              <!-- <span>назад</span> -->
             </button>
             <div class="theme-options">
-              <button class="theme-option theme-option-dark" data-theme="dark">
-                <div class="theme-option-icon">
-                  <i class="fa-solid fa-moon"></i>
-                </div>
-                <div class="theme-option-content">
-                  <span class="theme-option-title-light">Светлая тема</span>
-                  <span class="theme-option-description">Классический светлый интерфейс</span>
-                </div>
-                <div class="theme-option-indicator"></div>
-              </button>
-              <button class="theme-option theme-option-light" data-theme="light">
+              <button class="theme-option theme-option-light">
                 <div class="theme-option-icon">
                   <i class="fa-solid fa-sun"></i>
                 </div>
                 <div class="theme-option-content">
-                  <span class="theme-option-title">Тёмная тема</span>
-                  <span class="theme-option-description">Тёмный интерфейс для комфорта глаз</span>
+                  <span class="theme-option-title" data-i18n="theme.light">Светлая тема</span>
+                  <span class="theme-option-description" data-i18n="theme.light_desc">Классический светлый интерфейс</span>
                 </div>
                 <div class="theme-option-indicator"></div>
+              </button>
+              <button class="theme-option theme-option-dark">
+                <div class="theme-option-icon">
+                  <i class="fa-solid fa-moon"></i>
+                </div>
+                <div class="theme-option-content">
+                  <span class="theme-option-title" data-i18n="theme.dark">Тёмная тема</span>
+                  <span class="theme-option-description" data-i18n="theme.dark_desc">Тёмный интерфейс для комфорта глаз</span>
+                </div>
+                <div class="theme-option-indicator"></div>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Подменю для языка -->
+          <div class="nav-submenu nav-submenu-language">
+            <button class="nav-back nav-back-language">
+              <i class="fa-solid fa-caret-left"></i>
+            </button>
+            <div class="language-options">
+              <button class="language-option language-option-en">
+                <div class="language-option-icon">
+                  <i class="fa-solid fa-flag-usa"></i>
+                </div>
+                <div class="language-option-content">
+                  <span class="language-option-title" data-i18n="language.english">English</span>
+                </div>
+                <div class="language-option-indicator"></div>
+              </button>
+              <button class="language-option language-option-ru">
+                <div class="language-option-icon">
+                  <i class="fa-solid fa-flag"></i>
+                </div>
+                <div class="language-option-content">
+                  <span class="language-option-title" data-i18n="language.russian">Русский</span>
+                </div>
+                <div class="language-option-indicator"></div>
               </button>
             </div>
           </div>
@@ -112,7 +149,7 @@
       </section>
     </main>
     <footer class="footer page__section">
-      <p class="footer__copyright">
+      <p class="footer__copyright" data-i18n="footer.copyright">
         © 2025 Dimitri Jmukhadze
       </p>
     </footer>
@@ -120,32 +157,32 @@
     <div class="popup popup_type_edit">
       <div class="popup__content">
         <button type="button" class="popup__close"><i class="fa-solid fa-xmark"></i></button>
-        <h3 class="popup__title">Редактировать профиль</h3>
+        <h3 class="popup__title" data-i18n="modals.edit_profile">Редактировать профиль</h3>
         <form class="popup__form" name="edit-profile">
-          <input type="text" name="name" class="popup__input popup__input_type_name" placeholder="Имя" required>
-          <input type="text" name="description" class="popup__input popup__input_type_description" placeholder="Занятие"
+          <input type="text" name="name" class="popup__input popup__input_type_name" data-i18n="forms.name_placeholder" placeholder="Имя" required>
+          <input type="text" name="description" class="popup__input popup__input_type_description" data-i18n="forms.description_placeholder" placeholder="Занятие"
             required>
-          <button type="submit" class="button popup__button">Сохранить</button>
+          <button type="submit" class="button popup__button" data-i18n="forms.save">Сохранить</button>
         </form>
       </div>
     </div>
     <div class="popup popup_type_delete">
       <div class="popup__content popup__content-delete">
         <button type="button" class="popup__close"><i class="fa-solid fa-xmark"></i></button>
-        <h3 class="popup__title">Вы уверены?</h3>
-        <button type="submit" class="button popup__button popup__button-delete">Удалить</button>
+        <h3 class="popup__title" data-i18n="modals.confirm_delete">Вы уверены?</h3>
+        <button type="submit" class="button popup__button popup__button-delete" data-i18n="forms.delete">Удалить</button>
       </div>
     </div>
     <div class="popup popup_type_new-card ">
       <div class="popup__content">
         <button type="button" class="popup__close"><i class="fa-solid fa-xmark"></i></button>
-        <h3 class="popup__title">Новое место</h3>
+        <h3 class="popup__title" data-i18n="modals.new_place">Новое место</h3>
         <form class="popup__form" name="new-place">
-          <input type="text" name="place-name" class="popup__input popup__input_type_card-name" placeholder="Название"
+          <input type="text" name="place-name" class="popup__input popup__input_type_card-name" data-i18n="forms.place_name_placeholder" placeholder="Название"
             required>
-          <input type="url" name="link" class="popup__input popup__input_type_url" placeholder="Ссылка на картинку"
+          <input type="url" name="link" class="popup__input popup__input_type_url" data-i18n="forms.image_link_placeholder" placeholder="Ссылка на картинку"
             required>
-          <button type="submit" class="button popup__button">Сохранить</button>
+          <button type="submit" class="button popup__button" data-i18n="forms.save">Сохранить</button>
         </form>
       </div>
     </div>
@@ -192,11 +229,11 @@
     <div class="popup popup_type_avatar">
       <div class="popup__content">
         <button type="button" class="popup__close"><i class="fa-solid fa-xmark"></i></button>
-        <h3 class="popup__title">Обновить аватар</h3>
+        <h3 class="popup__title" data-i18n="modals.update_avatar">Обновить аватар</h3>
         <form class="popup__form" name="new-avatar">
-          <input type="url" name="link" class="popup__input popup__input_type_url" placeholder="Ссылка на аватар"
+          <input type="url" name="link" class="popup__input popup__input_type_url" data-i18n="forms.avatar_link_placeholder" placeholder="Ссылка на аватар"
             required>
-          <button type="submit" class="button popup__button">Сохранить</button>
+          <button type="submit" class="button popup__button" data-i18n="forms.save">Сохранить</button>
         </form>
       </div>
     </div>
