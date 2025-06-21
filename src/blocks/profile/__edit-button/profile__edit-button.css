@@ -1,4 +1,5 @@
 .profile__edit-button {
+  display: none;
   width: 24px;
   height: 24px;
   background: transparent var(--edit-icon) center no-repeat;
