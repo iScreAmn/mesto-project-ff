@@ -11,10 +11,12 @@ import {
   createCardElement,
   handleLikeCard,
 } from "./components/card.js";
-import { saveProfileData, loadProfileData } from './data/storage.js';
+import { saveProfileData, loadProfileData, saveCards, loadCards } from './data/storage.js';
 import { initializePopupImageHandlers, openImagePopup } from './components/popup-image.js';
 
-let currentCards = [...importedInitialCards]; // Объявляем и инициализируем currentCards в глобальной области видимости модуля
+// Загружаем карточки из localStorage, если есть, иначе используем начальные
+const savedCards = loadCards();
+let currentCards = savedCards.length > 0 ? savedCards : [...importedInitialCards];
 
 document.addEventListener("DOMContentLoaded", async () => {
   if (!localStorage.getItem('userId')) {
@@ -165,6 +167,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Вызов функции для добавления карточек на страницу при загрузке,
   // когда DOM гарантированно готов и currentCards доступна.
   renderCards(currentCards);
+  
+  // Если это первый запуск (карточки загружены из начальных данных), сохраняем их
+  if (savedCards.length === 0 && currentCards.length > 0) {
+    saveCards(currentCards);
+  }
+  
+  // Обновляем состояние кнопок форм после инициализации
+  toggleNewButton();
+  toggleAvatarButton();
 });
 
 // Установите изображение как background-image
@@ -199,6 +210,8 @@ let cardToDelete = null; // Переменная для хранения кар�
 // Функция для обработки удаления карточки из избранного на активной вкладке "Избранное"
 function handleUnfavoriteFromActiveTab(cardLink) {
   currentCards = currentCards.filter(card => card.link !== cardLink);
+  // Сохраняем обновленный список карточек в localStorage
+  saveCards(currentCards);
 }
 
 // Функция для запроса на удаление карточки (открывает модальное окно)
@@ -453,6 +466,9 @@ if (formNewCard) {
     // Добавляем карточку в начало списка
     placesList.prepend(newCardElement);
     currentCards.unshift(newCardData); // Обновляем currentCards
+    
+    // Сохраняем обновленный список карточек в localStorage
+    saveCards(currentCards);
 
     closeModal(popupNewCard);
     evt.target.reset();
@@ -504,6 +520,9 @@ if (confirmDeleteButton) {
         
         // Удаляем из текущего массива карточек
         currentCards = currentCards.filter(card => card.link !== cardLinkToDelete);
+        
+        // Сохраняем обновленный список карточек в localStorage
+        saveCards(currentCards);
       }
       
       // Удаляем DOM-элемент карточки
