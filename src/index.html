@@ -141,6 +141,7 @@
         <div class="profile__tabs">
           <button class="profile-tab profile-tab-image"><i class="fa-regular fa-file-image"></i></button>
           <button class="profile-tab profile-tab-favorites"><i class="fa-regular fa-bookmark"></i></button>
+          <button class="profile-tab profile-tab-trash"><i class="fa-regular fa-trash-can"></i></button>
         </div>
       </section>
       <section class="places page__section">
@@ -264,6 +265,24 @@
         <div class="card__like-wrapper">
           <button type="button" class="card__like-button"></button>
           <span class="card__like-count"></span>
+        </div>
+      </div>
+    </li>
+  </template>
+
+  <template id="trash-card-template">
+    <li class="places__item card card--trash">
+      <img class="card__image" src="" alt="" />
+      <button type="button" class="card__restore-button" title="Восстановить">
+        <i class="fa-solid fa-backward-fast"></i>
+      </button>
+      <button type="button" class="card__permanent-delete-button" title="Удалить навсегда">
+        <i class="fa-solid fa-trash"></i>
+      </button>
+      <div class="card__description">
+        <h2 class="card__title"></h2>
+        <div class="card__like-wrapper">
+          <span class="card__deleted-date"></span>
         </div>
       </div>
     </li>

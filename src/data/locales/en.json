@@ -6,7 +6,9 @@
     "edit": "Edit Profile",
     "add": "Add Place",
     "images": "Images",
-    "favorites": "Favorites"
+    "favorites": "Favorites",
+    "trash": "Trash",
+    "restore": "Restore"
   },
   "navigation": {
     "profile": "Profile",

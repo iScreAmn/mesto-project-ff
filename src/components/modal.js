@@ -1,4 +1,5 @@
 import { closeImagePopup } from './popup-image.js';
+import { lockScroll, unlockScroll } from './scroll-lock.js';
 
 // Функция-обработчик события нажатия Esc (внутренняя)
 function handleEscClose(evt) {
@@ -22,6 +23,10 @@ function handleOverlayClose(evt) {
 // Функция открытия модального окна
 export function openModal(popupElement) {
   // console.log('Открытие модального окна:', popupElement);
+  
+  // Блокируем скролл фона
+  lockScroll();
+  
   popupElement.classList.add('popup_is-animated');
   popupElement.style.display = 'flex';
   requestAnimationFrame(() => {
@@ -37,6 +42,9 @@ export function closeModal(popupElement) {
   if (popupElement && popupElement.classList.contains('popup_type_image')) {
     closeImagePopup();
   }
+  
+  // Разблокируем скролл фона
+  unlockScroll();
   
   popupElement.classList.remove('popup_is-opened');
   popupElement.addEventListener('transitionend', function handler(evt) {

@@ -1,0 +1,90 @@
+/* Кнопка восстановления карточки из корзины */
+.card__restore-button {
+  width: 18px;
+  height: 18px;
+  border: none;
+  background: transparent;
+  background-image: none;
+  cursor: pointer;
+  position: absolute;
+  top: 29px;
+  right: 16%;
+  z-index: 1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #fff;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+/* Кнопка окончательного удаления из корзины */
+.card__permanent-delete-button {
+  width: 18px;
+  height: 18px;
+  border: none;
+  background: transparent;
+  background-image: none;
+  cursor: pointer;
+  position: absolute;
+  top: 7%;
+  right: 8%;
+  z-index: 1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #fff;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.card__restore-button:hover {
+  color: white;
+  transform: scale(1.1);
+}
+
+.card__restore-button:active {
+  transform: scale(1.1);
+}
+
+/* Ховер для кнопки окончательного удаления */
+.card__permanent-delete-button:hover {
+
+  transform: scale(1.1);
+}
+
+.card__permanent-delete-button:active {
+  transform: scale(1.1);
+}
+
+/* Показываем кнопки только при ховере на карточку в корзине */
+.card--trash:hover .card__restore-button,
+.card--trash:hover .card__permanent-delete-button {
+  opacity: 1;
+}
+
+/* Дополнительные стили для карточек в корзине */
+.card--trash {
+  opacity: 0.7;
+  filter: grayscale(30%);
+  transition: all 0.3s ease;
+}
+
+.card--trash:hover {
+  opacity: 1;
+  filter: grayscale(0%);
+  transform: translateY(-2px);
+}
+
+.card__deleted-date {
+  font-size: 12px;
+  color: #888;
+  font-style: italic;
+  position: absolute;
+  top: 32px;
+  right: -10px;
+}

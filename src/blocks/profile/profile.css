@@ -15,7 +15,23 @@
   position: relative;
 }
 
-.profile::before {
+/* Убираем серую линию из profile, теперь она будет в контейнере вкладок */
+
+/* Контейнер для вкладок профиля */
+.profile__tabs {
+  position: absolute;
+  bottom: -12%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 60px;
+  width: 100%;
+}
+
+/* Серая базовая линия на всю длину профиля */
+.profile__tabs::before {
   content: '';
   width: 100%;
   height: 1px;
@@ -23,11 +39,7 @@
   background: #545454;
   position: absolute;
   left: 50%;
-  top: 93%;
-  -webkit-transform: translateX(-50%);
-  -moz-transform: translateX(-50%);
-  -ms-transform: translateX(-50%);
-  -o-transform: translateX(-50%);
+  top: -6px;
   transform: translateX(-50%);
   bottom: 0;
 }
@@ -36,13 +48,13 @@
   border: none;
   background: none;
   color: var(--text-color);
-  font-size: 20px;
+  font-size: 23px;
   transition: all 0.3s ease;
   transform: scale(1);
   opacity: 0.7;
+  cursor: pointer;
+  position: relative;
 }
-
-
 
 .profile-tab:active {
   opacity: 0.8;
@@ -54,41 +66,21 @@
   color: #378bd0;
 }
 
-.profile-tab-image {
-  position: absolute;
-  top: 97%;
-  left: 45%;
-  cursor: pointer;
-  font-size: 23px;
-  cursor: pointer;
-}
-
-.profile-tab-favorites {
-  position: absolute;
-  top: 97%;
-  right: 35%;
-  cursor: pointer;
-  font-size: 23px;
-  cursor: pointer;
-}
-
-.profile-tab-image::before,
-.profile-tab-favorites::before {
+.profile-tab::before {
   content: "";
   position: absolute;
   top: -7px;
   left: 50%;
   transform: translateX(-50%) scaleX(0);
-  transform-origin: left;
-  width: 50px;
+  transform-origin: center;
+  width: 40px;
   height: 2px;
   background-color: #378bd0;
   border-radius: 1px;
   transition: transform 0.4s ease-out;
 }
 
-.profile-tab-image.active::before,
-.profile-tab-favorites.active::before {
+.profile-tab.active::before {
   transform: translateX(-50%) scaleX(1);
 }
 
@@ -99,13 +91,13 @@
     text-align: center;
   }
 
-  .profile-tab-image {
-    left: 35%;
-    top: 95%;
+  .profile__tabs {
+    gap: 75px;
+    /* max-width: 250px; */
+    bottom: -10px;
   }
-  .profile-tab-favorites {
-    right: 30%;
-    top: 95%;
 
+  .profile-tab {
+    font-size: 28px;
   }
 }

@@ -2,7 +2,7 @@
   width: 21px;
   height: 18px;
   background: transparent url('../../../images/like-inactive.svg') no-repeat;
-  
+
   background-size: 21px 18px;
   border: none;
   cursor: pointer;
@@ -29,17 +29,22 @@
 .card__like-wrapper {
   position: relative;
   display: inline-block;
+  position: absolute;
+  right: 0%;
+  top: 42%;
 }
 
 /* Счётчик поверх, под иконкой */
 .card__like-count {
   position: absolute;
-  bottom: -18px; /* примерно высота + отступ */
+  bottom: -18px;
+  /* примерно высота + отступ */
   left: 50%;
   transform: translateX(-50%);
   font-size: 12px;
   color: #000;
-  display: block; /* JS покажет/скроет */
+  display: block;
+  /* JS покажет/скроет */
 }
 
 .card__like-count_visible {

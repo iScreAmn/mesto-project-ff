@@ -6,17 +6,22 @@ import { openModal, closeModal } from "./components/modal.js";
 import { initThemeToggle } from "./components/theme.js";
 import { initI18n } from "./components/i18n.js";
 import { initFileUpload, getImageBase64, hasFile, resetFileUpload } from "./components/file-upload.js";
+import { lockScroll, unlockScroll } from "./components/scroll-lock.js";
 import '@fortawesome/fontawesome-free/css/all.css';
 import {
   createCardElement,
+  createTrashCardElement,
   handleLikeCard,
 } from "./components/card.js";
-import { saveProfileData, loadProfileData, saveCards, loadCards } from './data/storage.js';
+import { saveProfileData, loadProfileData, saveCards, loadCards, saveTrashCards, loadTrashCards } from './data/storage.js';
 import { initializePopupImageHandlers, openImagePopup } from './components/popup-image.js';
 
 // Загружаем карточки из localStorage, если есть, иначе используем начальные
 const savedCards = loadCards();
 let currentCards = savedCards.length > 0 ? savedCards : [...importedInitialCards];
+
+// Загружаем корзину
+let trashCards = loadTrashCards();
 
 document.addEventListener("DOMContentLoaded", async () => {
   if (!localStorage.getItem('userId')) {
@@ -235,6 +240,88 @@ function renderCards(cardsToRender) {
     placesList.appendChild(cardElement);
   });
 }
+
+// Функция для отображения карточек из корзины
+function renderTrashCards(trashCardsToRender) {
+  placesList.innerHTML = ''; // Очищаем список перед рендерингом
+  trashCardsToRender.forEach((cardData) => {
+    const cardElement = createTrashCardElement(
+      cardData,
+      handleRestoreCard, // Передаем обработчик восстановления
+      handlePermanentDeleteRequest // Передаем обработчик окончательного удаления
+    );
+    placesList.appendChild(cardElement);
+  });
+}
+
+// Функция для перемещения карточки в корзину
+function moveCardToTrash(cardData) {
+  // Добавляем дату удаления
+  cardData.deletedAt = new Date().toISOString();
+  
+  // Добавляем в корзину
+  trashCards.unshift(cardData);
+  saveTrashCards(trashCards);
+  
+  // Удаляем из основного списка
+  currentCards = currentCards.filter(card => card.link !== cardData.link);
+  saveCards(currentCards);
+  
+  console.log(`🗑️ Карточка "${cardData.name}" перемещена в корзину`);
+}
+
+// Функция для восстановления карточки из корзины
+function handleRestoreCard(cardData, cardElement) {
+  // Удаляем из корзины
+  trashCards = trashCards.filter(card => card.link !== cardData.link);
+  saveTrashCards(trashCards);
+  
+  // Очищаем дату удаления
+  delete cardData.deletedAt;
+  
+  // Добавляем обратно в основной список
+  currentCards.unshift(cardData);
+  saveCards(currentCards);
+  
+  // Удаляем элемент из DOM
+  cardElement.remove();
+  
+  console.log(`♻️ Карточка "${cardData.name}" восстановлена из корзины`);
+}
+
+// Функция для запроса окончательного удаления карточки из корзины
+function handlePermanentDeleteRequest(cardData, cardElement) {
+  // Сохраняем данные для использования в обработчике подтверждения
+  window.permanentDeleteCardData = cardData;
+  window.permanentDeleteCardElement = cardElement;
+  
+  // Открываем модальное окно подтверждения удаления
+  const popupDelete = document.querySelector('.popup_type_delete');
+  openModal(popupDelete);
+}
+
+// Функция для окончательного удаления карточки из корзины
+function permanentDeleteCard(cardData, cardElement) {
+  // Удаляем из корзины
+  trashCards = trashCards.filter(card => card.link !== cardData.link);
+  saveTrashCards(trashCards);
+  
+  // Удаляем все связанные данные из localStorage
+  localStorage.removeItem(`likes_${cardData.link}`);
+  
+  // Также удаляем из избранного если была там
+  let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+  const favIndex = favorites.indexOf(cardData.link);
+  if (favIndex !== -1) {
+    favorites.splice(favIndex, 1);
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+  }
+  
+  // Удаляем элемент из DOM
+  cardElement.remove();
+  
+  console.log(`🗑️ Карточка "${cardData.name}" окончательно удалена`);
+}
 // Начальный рендеринг карточек перенесен внутрь DOMContentLoaded
 
 // Фильтрация по избранному и изображениям
@@ -242,11 +329,13 @@ function renderCards(cardsToRender) {
 
 const profileTabFavorites = document.querySelector('.profile-tab-favorites');
 const profileTabImages = document.querySelector('.profile-tab-image');
+const profileTabTrash = document.querySelector('.profile-tab-trash');
 
 if (profileTabFavorites) {
   profileTabFavorites.addEventListener('click', () => {
     // Переключаем активную вкладку
     document.querySelector('.profile-tab-image').classList.remove('active');
+    document.querySelector('.profile-tab-trash').classList.remove('active');
     profileTabFavorites.classList.add('active');
     
     const favLinks = JSON.parse(localStorage.getItem('favorites')) || [];
@@ -260,9 +349,21 @@ if (profileTabImages) {
   profileTabImages.addEventListener('click', () => {
     // Переключаем активную вкладку
     document.querySelector('.profile-tab-favorites').classList.remove('active');
+    document.querySelector('.profile-tab-trash').classList.remove('active');
     profileTabImages.classList.add('active');
     
     renderCards(currentCards); // Отображаем currentCards
+  });
+}
+
+if (profileTabTrash) {
+  profileTabTrash.addEventListener('click', () => {
+    // Переключаем активную вкладку
+    document.querySelector('.profile-tab-image').classList.remove('active');
+    document.querySelector('.profile-tab-favorites').classList.remove('active');
+    profileTabTrash.classList.add('active');
+    
+    renderTrashCards(trashCards); // Отображаем карточки из корзины
   });
 }
 // События для модального окна добавления
@@ -335,7 +436,13 @@ if (burgerButton && dropdownOverlay) {
     e.stopPropagation();
     burgerButton.classList.toggle("open");
     dropdownOverlay.classList.toggle("open");
-    document.body.style.overflow = dropdownOverlay.classList.contains("open") ? "hidden" : "";
+    
+    // Используем централизованное управление скроллом
+    if (dropdownOverlay.classList.contains("open")) {
+      lockScroll();
+    } else {
+      unlockScroll();
+    }
   });
 
   // Закрытие меню по клику на кнопку закрытия
@@ -377,7 +484,8 @@ function closeDropdownMenu() {
     languageSubmenu.classList.remove("open");
   }
   
-  document.body.style.overflow = "";
+  // Используем централизованное управление скроллом
+  unlockScroll();
 }
 
 // Обработчики навигации
@@ -501,27 +609,38 @@ placesList.addEventListener("click", (evt) => {
 // Подтверждение удаления
 if (confirmDeleteButton) {
   confirmDeleteButton.addEventListener("click", () => {
-    if (window.cardToDelete) {
+    // Проверяем, какой тип удаления: из корзины или обычное
+    if (window.permanentDeleteCardData && window.permanentDeleteCardElement) {
+      // Окончательное удаление из корзины
+      permanentDeleteCard(window.permanentDeleteCardData, window.permanentDeleteCardElement);
+      
+      // Очищаем временные данные
+      window.permanentDeleteCardData = null;
+      window.permanentDeleteCardElement = null;
+      
+    } else if (window.cardToDelete) {
+      // Обычное удаление (перемещение в корзину)
       const cardImageElement = window.cardToDelete.querySelector('.card__image');      
       if (cardImageElement) {
         const cardLinkToDelete = cardImageElement.src;
+        
+        // Находим данные карточки
+        const cardData = currentCards.find(card => card.link === cardLinkToDelete);
+        if (cardData) {
+          // Перемещаем в корзину вместо окончательного удаления
+          moveCardToTrash(cardData);
 
-        // Удаляем из списка избранного
-        let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-        const favIndex = favorites.indexOf(cardLinkToDelete);
-        if (favIndex !== -1) {
-          favorites.splice(favIndex, 1);
-          localStorage.setItem('favorites', JSON.stringify(favorites));
+          // Удаляем из списка избранного
+          let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+          const favIndex = favorites.indexOf(cardLinkToDelete);
+          if (favIndex !== -1) {
+            favorites.splice(favIndex, 1);
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+          }
+
+          // Лайки оставляем, они могут понадобиться при восстановлении
+          // localStorage.removeItem(`likes_${cardLinkToDelete}`);
         }
-
-        // Удаляем лайки
-        localStorage.removeItem(`likes_${cardLinkToDelete}`);
-        
-        // Удаляем из текущего массива карточек
-        currentCards = currentCards.filter(card => card.link !== cardLinkToDelete);
-        
-        // Сохраняем обновленный список карточек в localStorage
-        saveCards(currentCards);
       }
       
       // Удаляем DOM-элемент карточки

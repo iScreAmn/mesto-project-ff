@@ -24,3 +24,10 @@
 .card__delete-button:hover {
   transform: scale(1.1);
 }
+
+/* Скрываем кнопку удаления когда активны вкладки "Мои изображения" или "Избранное" */
+body:has(.profile-tab-image.active) .card:hover .card__delete-button,
+body:has(.profile-tab-favorites.active) .card:hover .card__delete-button {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}

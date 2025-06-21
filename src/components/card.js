@@ -127,3 +127,61 @@ export function handleDeleteCard(event) {
 export function handleLikeCard(event) {
   event.target.classList.toggle('card__like-button_is-active');
 }
+
+// Функция для создания элемента карточки в корзине
+export function createTrashCardElement(cardDetails, onRestoreCard, onPermanentDeleteCard) {
+  const trashCardTemplate = document.querySelector('#trash-card-template');
+  if (!trashCardTemplate) {
+    console.error('Шаблон карточки корзины #trash-card-template не найден.');
+    const errorElement = document.createElement('div');
+    errorElement.textContent = 'Ошибка: Шаблон карточки корзины не найден.';
+    return errorElement;
+  }
+
+  const cardFragment = trashCardTemplate.content.cloneNode(true);
+  const cardElement = cardFragment.querySelector('.places__item'); 
+  
+  if (!cardElement) {
+    console.error('Элемент .places__item не найден в шаблоне карточки корзины.');
+    const errorElement = document.createElement('div');
+    errorElement.textContent = 'Ошибка: Структура шаблона карточки корзины неверна.';
+    return errorElement;
+  }
+
+  const cardTitle = cardElement.querySelector('.card__title');
+  const cardImage = cardElement.querySelector('.card__image');
+  const restoreButton = cardElement.querySelector('.card__restore-button');
+  const permanentDeleteButton = cardElement.querySelector('.card__permanent-delete-button');
+  const deletedDateElement = cardElement.querySelector('.card__deleted-date');
+
+  cardTitle.textContent = cardDetails.name;
+  cardImage.src = cardDetails.link;
+  cardImage.alt = cardDetails.name;
+
+  // Показываем дату удаления
+  if (deletedDateElement && cardDetails.deletedAt) {
+    const deletedDate = new Date(cardDetails.deletedAt);
+    deletedDateElement.textContent = `Удалено: ${deletedDate.toLocaleDateString()}`;
+  }
+
+  if (restoreButton) {
+    restoreButton.addEventListener('click', () => {
+      onRestoreCard(cardDetails, cardElement);
+    });
+  }
+
+  if (permanentDeleteButton) {
+    permanentDeleteButton.addEventListener('click', () => {
+      onPermanentDeleteCard(cardDetails, cardElement);
+    });
+  }
+
+  if (cardImage) {
+    cardImage.addEventListener('click', () => {
+      // В корзине изображения не кликабельны для просмотра
+      console.log('Изображение в корзине, просмотр недоступен');
+    });
+  }
+
+  return cardElement;
+}
