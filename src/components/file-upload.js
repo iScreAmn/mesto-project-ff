@@ -81,13 +81,26 @@ class FileUploadManager {
   createPreview(file, previewContainer, uploadContainer, inputElement) {
     const reader = new FileReader();
     
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       // Очищаем предыдущее превью
       previewContainer.innerHTML = '';
       
+      // Сжимаем изображение для экономии места
+      let imageData = e.target.result;
+      const originalSize = imageData.length;
+      
+      try {
+        imageData = await this.compressImage(imageData, 0.8); // 80% качества
+        const compressedSize = imageData.length;
+        const savings = ((originalSize - compressedSize) / originalSize * 100).toFixed(1);
+        console.log(`🗜️ Изображение сжато на ${savings}% (${(originalSize/1024).toFixed(1)}KB → ${(compressedSize/1024).toFixed(1)}KB)`);
+      } catch (error) {
+        console.warn('⚠️ Не удалось сжать изображение, используем оригинал:', error);
+      }
+      
       // Создаем элементы превью
       const img = document.createElement('img');
-      img.src = e.target.result;
+      img.src = imageData;
       img.alt = 'Preview';
       
       const removeBtn = document.createElement('button');
@@ -106,8 +119,8 @@ class FileUploadManager {
       previewContainer.appendChild(removeBtn);
       previewContainer.classList.add('has-image');
       
-      // Сохраняем base64 в data-атрибуте input'а для дальнейшего использования
-      inputElement.dataset.base64 = e.target.result;
+      // Сохраняем сжатый base64 в data-атрибуте input'а для дальнейшего использования
+      inputElement.dataset.base64 = imageData;
     };
     
     reader.onerror = () => {
@@ -115,6 +128,49 @@ class FileUploadManager {
     };
     
     reader.readAsDataURL(file);
+  }
+
+  // Функция для сжатия изображений
+  compressImage(base64String, quality = 0.8) {
+    return new Promise((resolve, reject) => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      
+      img.onload = function() {
+        // Устанавливаем максимальные размеры для экономии места
+        const maxWidth = 1200;  // Увеличено для лучшего качества
+        const maxHeight = 900;
+        
+        let { width, height } = img;
+        
+        // Пропорциональное уменьшение только если изображение слишком большое
+        if (width > maxWidth || height > maxHeight) {
+          const ratio = Math.min(maxWidth / width, maxHeight / height);
+          width *= ratio;
+          height *= ratio;
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        
+        // Улучшенное качество рендеринга
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        // Сжимаем с указанным качеством
+        const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+        resolve(compressedBase64);
+      };
+      
+      img.onerror = () => {
+        reject(new Error('Не удалось загрузить изображение для сжатия'));
+      };
+      
+      img.src = base64String;
+    });
   }
 
   updateUploadUI(uploadContainer, fileName) {

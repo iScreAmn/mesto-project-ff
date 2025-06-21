@@ -17,6 +17,8 @@
     "theme_desc": "Светлая / Тёмная",
     "language": "Язык",
     "language_desc": "English / Русский",
+    "storage": "Хранилище",
+    "storage_desc": "Очистить данные",
     "back": "назад"
   },
   "theme": {

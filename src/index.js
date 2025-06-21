@@ -13,7 +13,7 @@ import {
   createTrashCardElement,
   handleLikeCard,
 } from "./components/card.js";
-import { saveProfileData, loadProfileData, saveCards, loadCards, saveTrashCards, loadTrashCards } from './data/storage.js';
+import { saveProfileData, loadProfileData, saveCards, loadCards, saveTrashCards, loadTrashCards, getStorageSize, getAvailableSpace, cleanupOldData, clearTrashCards } from './data/storage.js';
 import { initializePopupImageHandlers, openImagePopup } from './components/popup-image.js';
 
 // Загружаем карточки из localStorage, если есть, иначе используем начальные
@@ -26,6 +26,17 @@ let trashCards = loadTrashCards();
 document.addEventListener("DOMContentLoaded", async () => {
   if (!localStorage.getItem('userId')) {
     localStorage.setItem('userId', 'user_' + Math.random().toString(36).substr(2, 9));
+  }
+  
+  // Проверяем состояние хранилища при загрузке
+  const storageSize = getStorageSize();
+  const availableSpace = getAvailableSpace();
+  console.log(`📊 Использование localStorage: ${(storageSize / 1024).toFixed(1)} KB`);
+  console.log(`📊 Доступно места: ${(availableSpace / 1024).toFixed(1)} KB`);
+  
+  // Предупреждаем если места мало
+  if (availableSpace < 1024 * 1024) { // Меньше 1MB
+    console.warn('⚠️ Мало места в localStorage, рекомендуется очистка');
   }
   
   // Инициализируем системы
@@ -501,6 +512,35 @@ if (navItemProfile) {
     
     closeDropdownMenu();
     openModal(popupEditProfile);
+  });
+}
+
+// Обработчик для очистки хранилища
+const navItemStorage = document.querySelector('.nav-item-storage');
+if (navItemStorage) {
+  navItemStorage.addEventListener("click", () => {
+    closeDropdownMenu();
+    
+    const currentSize = getStorageSize();
+    const availableSpace = getAvailableSpace();
+    
+    const message = `Текущее использование: ${(currentSize / 1024).toFixed(1)} KB\nДоступно места: ${(availableSpace / 1024).toFixed(1)} KB\n\nОчистить старые данные?`;
+    
+    if (confirm(message)) {
+      cleanupOldData();
+      
+      // Показываем результат
+      const newSize = getStorageSize();
+      const freed = currentSize - newSize;
+      
+      if (freed > 0) {
+        alert(`Освобождено ${(freed / 1024).toFixed(1)} KB места!`);
+      } else {
+        alert('Нет данных для очистки.');
+      }
+      
+      console.log(`🧹 Очистка завершена. Освобождено: ${(freed / 1024).toFixed(1)} KB`);
+    }
   });
 }
 

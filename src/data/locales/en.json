@@ -17,6 +17,8 @@
     "theme_desc": "Light / Dark",
     "language": "Language",
     "language_desc": "English / Russian",
+    "storage": "Storage",
+    "storage_desc": "Clear data",
     "back": "back"
   },
   "theme": {
