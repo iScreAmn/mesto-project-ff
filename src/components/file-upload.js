@@ -175,6 +175,24 @@ class FileUploadManager {
     const input = document.getElementById(inputId);
     return input?.files.length > 0;
   }
+
+  // Сбросить состояние загрузчика файлов
+  resetFileUpload(inputId) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+
+    const uploadContainer = input.closest('.popup__file-upload');
+    const previewContainer = input.parentElement.querySelector('.popup__image-preview');
+    
+    if (uploadContainer && previewContainer) {
+      // Очищаем input
+      input.value = '';
+      delete input.dataset.base64;
+      
+      // Очищаем превью и состояния
+      this.clearPreview(previewContainer, uploadContainer);
+    }
+  }
 }
 
 // Создаем единственный экземпляр
@@ -191,4 +209,8 @@ export function getImageBase64(inputId) {
 
 export function hasFile(inputId) {
   return fileUploadManager.hasFile(inputId);
+}
+
+export function resetFileUpload(inputId) {
+  return fileUploadManager.resetFileUpload(inputId);
 } 

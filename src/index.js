@@ -5,7 +5,7 @@ import { initialCards as importedInitialCards } from "./components/cards.js"; //
 import { openModal, closeModal } from "./components/modal.js";
 import { initThemeToggle } from "./components/theme.js";
 import { initI18n } from "./components/i18n.js";
-import { initFileUpload, getImageBase64, hasFile } from "./components/file-upload.js";
+import { initFileUpload, getImageBase64, hasFile, resetFileUpload } from "./components/file-upload.js";
 import '@fortawesome/fontawesome-free/css/all.css';
 import {
   createCardElement,
@@ -274,11 +274,8 @@ closeButtonNewCard.addEventListener("click", () => {
     newCardForm.reset();
   }
   
-  // Очищаем превью изображения
-  const preview = document.getElementById('place-image-preview');
-  const uploadContainer = document.querySelector('.popup_type_new-card .popup__file-upload');
-  if (preview) preview.classList.remove('has-image');
-  if (uploadContainer) uploadContainer.classList.remove('has-file');
+  // Сбрасываем состояние загрузчика файлов
+  resetFileUpload('place-image-upload');
   
   closeModal(popupNewCard);
 });
@@ -291,11 +288,8 @@ popupNewCard.addEventListener("mousedown", (evt) => {
       newCardForm.reset();
     }
     
-    // Очищаем превью изображения
-    const preview = document.getElementById('place-image-preview');
-    const uploadContainer = document.querySelector('.popup_type_new-card .popup__file-upload');
-    if (preview) preview.classList.remove('has-image');
-    if (uploadContainer) uploadContainer.classList.remove('has-file');
+    // Сбрасываем состояние загрузчика файлов
+    resetFileUpload('place-image-upload');
     
     closeModal(popupNewCard);
   }
@@ -307,6 +301,10 @@ closeButtonAvatar.addEventListener("click", () => {
   if (avatarForm) {
     avatarForm.reset();
   }
+  
+  // Сбрасываем состояние загрузчика файлов
+  resetFileUpload('avatar-upload');
+  
   closeModal(popupAvatar);
 });
 closeButtonDelete.addEventListener("click", () => closeModal(popupDelete));
@@ -323,6 +321,10 @@ if (profileImage && popupAvatar) {
         saveAvatarBtn.classList.add('disabled');
       }
     }
+    
+    // Сбрасываем состояние загрузчика файлов
+    resetFileUpload('avatar-upload');
+    
     openModal(popupAvatar);
   });
 }
@@ -473,11 +475,8 @@ if (formNewCard) {
     closeModal(popupNewCard);
     evt.target.reset();
     
-    // Очищаем превью изображения
-    const preview = document.getElementById('place-image-preview');
-    const uploadContainer = document.querySelector('.popup_type_new-card .popup__file-upload');
-    if (preview) preview.classList.remove('has-image');
-    if (uploadContainer) uploadContainer.classList.remove('has-file');
+    // Сбрасываем состояние загрузчика файлов
+    resetFileUpload('place-image-upload');
   });
 }
 
@@ -573,11 +572,8 @@ if (formAvatar) {
     closeModal(popupAvatar);
     evt.target.reset();
     
-    // Очищаем превью изображения
-    const preview = document.getElementById('avatar-preview');
-    const uploadContainer = document.querySelector('.popup_type_avatar .popup__file-upload');
-    if (preview) preview.classList.remove('has-image');
-    if (uploadContainer) uploadContainer.classList.remove('has-file');
+    // Сбрасываем состояние загрузчика файлов
+    resetFileUpload('avatar-upload');
   });
 }
 
@@ -590,11 +586,8 @@ popupAvatar.addEventListener("mousedown", (evt) => {
       avatarForm.reset();
     }
     
-    // Очищаем превью изображения
-    const preview = document.getElementById('avatar-preview');
-    const uploadContainer = document.querySelector('.popup_type_avatar .popup__file-upload');
-    if (preview) preview.classList.remove('has-image');
-    if (uploadContainer) uploadContainer.classList.remove('has-file');
+    // Сбрасываем состояние загрузчика файлов
+    resetFileUpload('avatar-upload');
     
     closeModal(popupAvatar);
   }
