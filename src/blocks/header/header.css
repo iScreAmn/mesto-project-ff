@@ -204,6 +204,10 @@
   background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
 }
 
+.nav-item-language .nav-item-icon {
+  background: linear-gradient(135deg, #36d1dc 0%, #5b86e5 100%);
+}
+
 .nav-item-content {
   flex: 1;
   display: flex;
@@ -381,8 +385,104 @@
   border-radius: 50%;
 }
 
-.theme-option-dark.active {
+/* Убрано правило color: #000 для .theme-option-dark.active,
+   чтобы заголовки использовали переменную --text-color */
+
+/* Опции языка */
+.language-options {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.language-option {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: none;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  position: relative;
+}
+
+.language-option:hover {
+  border-color: rgba(128, 128, 128, 0.3);
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+.language-option.active {
+  border-color: #36d1dc;
+  background-color: rgba(54, 209, 220, 0.1);
+}
+
+.language-option-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.language-option-ru .language-option-icon {
+  background: linear-gradient(135deg, #ff7675 0%, #d63031 100%);
+  color: white;
+}
+
+.language-option-en .language-option-icon {
+  background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+  color: white;
+}
+
+.language-option-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.language-option-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.language-option-description {
+  font-size: 12px;
+  color: rgba(128, 128, 128, 0.8);
+}
+
+.language-option-indicator {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(128, 128, 128, 0.3);
+  border-radius: 50%;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.language-option.active .language-option-indicator {
   color: #fff;
+  border-color: #36d1dc;
+}
+
+.language-option.active .language-option-indicator::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  background: #36d1dc;
+  border-radius: 50%;
 }
 
 /* Мобильная адаптация */

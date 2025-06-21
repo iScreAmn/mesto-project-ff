@@ -1,0 +1,50 @@
+{
+  "header": {
+    "title": "Mesto"
+  },
+  "profile": {
+    "edit": "Edit Profile",
+    "add": "Add Place",
+    "images": "Images",
+    "favorites": "Favorites"
+  },
+  "navigation": {
+    "profile": "Profile",
+    "profile_desc": "Edit profile",
+    "theme": "Theme",
+    "theme_desc": "Light / Dark",
+    "language": "Language",
+    "language_desc": "English / Russian",
+    "back": "back"
+  },
+  "theme": {
+    "dark": "Dark Theme",
+    "dark_desc": "Dark interface for eye comfort",
+    "light": "Light Theme",
+    "light_desc": "Classic light interface"
+  },
+  "language": {
+    "russian": "Русский",
+    "russian_desc": "Russian language",
+    "english": "English",
+    "english_desc": "English language"
+  },
+  "forms": {
+    "save": "Save",
+    "delete": "Delete",
+    "name_placeholder": "Name",
+    "description_placeholder": "About",
+    "place_name_placeholder": "Title",
+    "image_link_placeholder": "Image URL",
+    "avatar_link_placeholder": "Avatar URL"
+  },
+  "modals": {
+    "edit_profile": "Edit Profile",
+    "new_place": "New Place",
+    "update_avatar": "Update Avatar",
+    "confirm_delete": "Are you sure?"
+  },
+  "footer": {
+    "copyright": "© 2025 Dimitri Jmukhadze"
+  }
+} 

@@ -4,6 +4,7 @@ import avatarImage from "./images/avatar.jpg";
 import { initialCards as importedInitialCards } from "./components/cards.js"; // Переименовываем для ясности
 import { openModal, closeModal } from "./components/modal.js";
 import { initThemeToggle } from "./components/theme.js";
+import { initI18n } from "./components/i18n.js";
 import '@fortawesome/fontawesome-free/css/all.css';
 import {
   createCardElement,
@@ -14,24 +15,14 @@ import { initializePopupImageHandlers, openImagePopup } from './components/popup
 
 let currentCards = [...importedInitialCards]; // Объявляем и инициализируем currentCards в глобальной области видимости модуля
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   if (!localStorage.getItem('userId')) {
     localStorage.setItem('userId', 'user_' + Math.random().toString(36).substr(2, 9));
   }
+  
+  // Инициализируем системы
   initThemeToggle();
-  
-  // Установка активной темы при загрузке
-  const savedTheme = localStorage.getItem('theme') || 'dark';
-  document.documentElement.setAttribute('data-theme', savedTheme);
-  
-  // Устанавливаем активную тему в меню
-  setTimeout(() => {
-    const activeOption = document.querySelector(`.theme-option-${savedTheme}`);
-    if (activeOption) {
-      document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove("active"));
-      activeOption.classList.add("active");
-    }
-  }, 100);
+  await initI18n();
 
   // Инициализация обработчиков для попапа изображения
   const popupImage = document.querySelector('.popup_type_image');
@@ -111,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // underline nav/profile/theme
   const underlineTargets = [
-    ...document.querySelectorAll(".nav-btn-theme, .nav-btn-profile, .theme-select-light, .theme-select-dark"),
+    ...document.querySelectorAll(".nav-btn-profile"),
   ];
 
   underlineTargets.forEach((btn) => {
@@ -182,10 +173,6 @@ const burgerButton = document.querySelector(".navigation__button");
 const dropdownOverlay = document.querySelector(".dropdown-overlay");
 const dropdownClose = document.querySelector(".dropdown-close");
 const navItemProfile = document.querySelector(".nav-item-profile");
-const navItemTheme = document.querySelector(".nav-item-theme");
-const themeSubmenu = document.querySelector(".nav-submenu-theme");
-const navBack = document.querySelector(".nav-back");
-const themeOptions = document.querySelectorAll(".theme-option");
 let cardToDelete = null; // Переменная для хранения карточки для удаления
 
 // Функция для обработки удаления карточки из избранного на активной вкладке "Избранное"
@@ -315,7 +302,19 @@ if (burgerButton && dropdownOverlay) {
 function closeDropdownMenu() {
   burgerButton.classList.remove("open");
   dropdownOverlay.classList.remove("open");
-  themeSubmenu.classList.remove("open");
+  
+  // Закрываем подменю темы, если оно есть
+  const themeSubmenu = document.querySelector(".nav-submenu-theme");
+  if (themeSubmenu) {
+    themeSubmenu.classList.remove("open");
+  }
+  
+  // Закрываем подменю языка, если оно есть
+  const languageSubmenu = document.querySelector(".nav-submenu-language");
+  if (languageSubmenu) {
+    languageSubmenu.classList.remove("open");
+  }
+  
   document.body.style.overflow = "";
 }
 
@@ -334,38 +333,6 @@ if (navItemProfile) {
     openModal(popupEditProfile);
   });
 }
-
-if (navItemTheme && themeSubmenu) {
-  navItemTheme.addEventListener("click", () => {
-    themeSubmenu.classList.add("open");
-  });
-}
-
-if (navBack && themeSubmenu) {
-  navBack.addEventListener("click", () => {
-    themeSubmenu.classList.remove("open");
-  });
-}
-
-// Обработчики выбора темы
-themeOptions.forEach(option => {
-  option.addEventListener("click", () => {
-    const theme = option.getAttribute("data-theme");
-    
-    // Переключаем тему
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
-    
-    // Убираем активный класс со всех опций
-    themeOptions.forEach(opt => opt.classList.remove("active"));
-    // Добавляем активный класс к выбранной опции
-    option.classList.add("active");
-    
-    console.log(`Тема переключена на: ${theme}`);
-    
-    // Меню остается открытым после выбора темы
-  });
-});
 
 // Старый обработчик profileBtn удален, используется новый в dropdown menu
 

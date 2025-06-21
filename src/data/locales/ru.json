@@ -1,0 +1,50 @@
+{
+  "header": {
+    "title": "Место"
+  },
+  "profile": {
+    "edit": "Редактировать профиль",
+    "add": "Добавить место",
+    "images": "Изображения",
+    "favorites": "Избранное"
+  },
+  "navigation": {
+    "profile": "Профиль",
+    "profile_desc": "Редактировать профиль",
+    "theme": "Тема",
+    "theme_desc": "Светлая / Тёмная",
+    "language": "Язык",
+    "language_desc": "English / Русский",
+    "back": "назад"
+  },
+  "theme": {
+    "dark": "Тёмная тема",
+    "dark_desc": "Тёмный интерфейс для комфорта глаз",
+    "light": "Светлая тема",
+    "light_desc": "Классический светлый интерфейс"
+  },
+  "language": {
+    "russian": "Русский",
+    "russian_desc": "Русский язык",
+    "english": "English",
+    "english_desc": "Английский язык"
+  },
+  "forms": {
+    "save": "Сохранить",
+    "delete": "Удалить",
+    "name_placeholder": "Имя",
+    "description_placeholder": "Занятие",
+    "place_name_placeholder": "Название",
+    "image_link_placeholder": "Ссылка на картинку",
+    "avatar_link_placeholder": "Ссылка на аватар"
+  },
+  "modals": {
+    "edit_profile": "Редактировать профиль",
+    "new_place": "Новое место",
+    "update_avatar": "Обновить аватар",
+    "confirm_delete": "Вы уверены?"
+  },
+  "footer": {
+    "copyright": "© 2025 Dimitri Jmukhadze"
+  }
+} 
