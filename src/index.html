@@ -21,16 +21,18 @@
         </div>
       </button>
     </header>
-    
+
     <!-- Современное выпадающее меню -->
     <div class="dropdown-overlay">
       <div class="dropdown-menu">
-        <div class="dropdown-header">
-          <!-- <h3 class="dropdown-title">меню</h3> -->
-          <button class="dropdown-close" aria-label="Close menu">
-            <i class="fa-solid fa-caret-down"></i>
+        <div class="header__nav-btn">
+          <button class="dropdown-header">
+            <button class="dropdown-close" aria-label="Close menu">
+              <i class="fa-solid fa-angles-right"></i>
+            </button>
           </button>
         </div>
+
         <nav class="dropdown-nav">
           <div class="nav-section">
             <button class="nav-item nav-item-profile">
@@ -43,7 +45,7 @@
               </div>
               <i class="fa-solid fa-chevron-right nav-item-arrow"></i>
             </button>
-            
+
             <button class="nav-item nav-item-theme">
               <div class="nav-item-icon">
                 <i class="fa-solid fa-palette"></i>
@@ -54,7 +56,7 @@
               </div>
               <i class="fa-solid fa-chevron-right nav-item-arrow"></i>
             </button>
-            
+
             <button class="nav-item nav-item-language">
               <div class="nav-item-icon">
                 <i class="fa-solid fa-globe"></i>
@@ -65,7 +67,7 @@
               </div>
               <i class="fa-solid fa-chevron-right nav-item-arrow"></i>
             </button>
-            
+
             <button class="nav-item nav-item-storage">
               <div class="nav-item-icon">
                 <i class="fa-solid fa-database"></i>
@@ -77,11 +79,11 @@
               <i class="fa-solid fa-chevron-right nav-item-arrow"></i>
             </button>
           </div>
-          
+
           <!-- Подменю для темы -->
           <div class="nav-submenu nav-submenu-theme">
             <button class="nav-back">
-              <i class="fa-solid fa-caret-left"></i>
+              <i class="fa-solid fa-angles-right"></i>
             </button>
             <div class="theme-options">
               <button class="theme-option theme-option-light">
@@ -90,7 +92,8 @@
                 </div>
                 <div class="theme-option-content">
                   <span class="theme-option-title" data-i18n="theme.light">Светлая тема</span>
-                  <span class="theme-option-description" data-i18n="theme.light_desc">Классический светлый интерфейс</span>
+                  <span class="theme-option-description" data-i18n="theme.light_desc">Классический светлый
+                    интерфейс</span>
                 </div>
                 <div class="theme-option-indicator"></div>
               </button>
@@ -100,17 +103,18 @@
                 </div>
                 <div class="theme-option-content">
                   <span class="theme-option-title" data-i18n="theme.dark">Тёмная тема</span>
-                  <span class="theme-option-description" data-i18n="theme.dark_desc">Тёмный интерфейс для комфорта глаз</span>
+                  <span class="theme-option-description" data-i18n="theme.dark_desc">Тёмный интерфейс для комфорта
+                    глаз</span>
                 </div>
                 <div class="theme-option-indicator"></div>
               </button>
             </div>
           </div>
-          
+
           <!-- Подменю для языка -->
           <div class="nav-submenu nav-submenu-language">
             <button class="nav-back nav-back-language">
-              <i class="fa-solid fa-caret-left"></i>
+              <i class="fa-solid fa-angles-right"></i>
             </button>
             <div class="language-options">
               <button class="language-option language-option-en">
@@ -171,9 +175,10 @@
         <button type="button" class="popup__close"><i class="fa-solid fa-xmark"></i></button>
         <h3 class="popup__title" data-i18n="modals.edit_profile">Редактировать профиль</h3>
         <form class="popup__form" name="edit-profile">
-          <input type="text" name="name" class="popup__input popup__input_type_name" data-i18n="forms.name_placeholder" placeholder="Имя" required>
-          <input type="text" name="description" class="popup__input popup__input_type_description" data-i18n="forms.description_placeholder" placeholder="Занятие"
-            required>
+          <input type="text" name="name" class="popup__input popup__input_type_name" data-i18n="forms.name_placeholder"
+            placeholder="Имя" required>
+          <input type="text" name="description" class="popup__input popup__input_type_description"
+            data-i18n="forms.description_placeholder" placeholder="Занятие" required>
           <button type="submit" class="button popup__button" data-i18n="forms.save">Сохранить</button>
         </form>
       </div>
@@ -182,7 +187,8 @@
       <div class="popup__content popup__content-delete">
         <button type="button" class="popup__close"><i class="fa-solid fa-xmark"></i></button>
         <h3 class="popup__title" data-i18n="modals.confirm_delete">Вы уверены?</h3>
-        <button type="submit" class="button popup__button popup__button-delete" data-i18n="forms.delete">Удалить</button>
+        <button type="submit" class="button popup__button popup__button-delete"
+          data-i18n="forms.delete">Удалить</button>
       </div>
     </div>
     <div class="popup popup_type_new-card ">
@@ -190,18 +196,19 @@
         <button type="button" class="popup__close"><i class="fa-solid fa-xmark"></i></button>
         <h3 class="popup__title" data-i18n="modals.new_place">Новое место</h3>
         <form class="popup__form" name="new-place">
-          <input type="text" name="place-name" class="popup__input popup__input_type_card-name" data-i18n="forms.place_name_placeholder" placeholder="Название"
-            required>
-          
+          <input type="text" name="place-name" class="popup__input popup__input_type_card-name"
+            data-i18n="forms.place_name_placeholder" placeholder="Название" required>
+
           <div class="popup__file-upload">
-            <input type="file" name="image-file" id="place-image-upload" class="popup__file-input" accept="image/*" required>
+            <input type="file" name="image-file" id="place-image-upload" class="popup__file-input" accept="image/*"
+              required>
             <label for="place-image-upload" class="popup__file-label">
               <i class="fa-solid fa-cloud-upload-alt"></i>
               <span data-i18n="forms.upload_image">Загрузить изображение</span>
             </label>
             <div class="popup__image-preview" id="place-image-preview"></div>
           </div>
-          
+
           <button type="submit" class="button popup__button" data-i18n="forms.save">Сохранить</button>
         </form>
       </div>
@@ -209,7 +216,7 @@
     <div class="popup popup_type_image">
       <div class="popup__content popup__content_content_image">
         <button type="button" class="popup__close"><i class="fa-solid fa-xmark"></i></button>
-        
+
         <div class="popup__user-header">
           <div class="popup__user-avatar">
             <img src="" alt="User Avatar" class="popup__avatar-image">
@@ -218,16 +225,18 @@
             <span class="popup__username">Franklin Haris</span>
           </div>
         </div>
-        
+
         <div class="popup__image-container">
-          <img src="https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg" alt="Serbia" class="popup__image">
-          
+          <img src="https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg" alt="Serbia"
+            class="popup__image">
+
           <div class="popup__image-overlay">
-            <button class="popup-btn popup-btn-next"><i class="popup-next fa-solid fa-circle-chevron-right"></i></button>
+            <button class="popup-btn popup-btn-next"><i
+                class="popup-next fa-solid fa-circle-chevron-right"></i></button>
             <button class="popup-btn popup-btn-prev"><i class="popup-prev fa-solid fa-circle-chevron-left"></i></button>
           </div>
         </div>
-        
+
         <div class="popup__content-area">
           <div class="popup-icons">
             <div class="popup-like-container">
@@ -252,14 +261,15 @@
         <h3 class="popup__title" data-i18n="modals.update_avatar">Обновить аватар</h3>
         <form class="popup__form" name="new-avatar">
           <div class="popup__file-upload">
-            <input type="file" name="avatar-file" id="avatar-upload" class="popup__file-input" accept="image/*" required>
+            <input type="file" name="avatar-file" id="avatar-upload" class="popup__file-input" accept="image/*"
+              required>
             <label for="avatar-upload" class="popup__file-label">
               <i class="fa-solid fa-user-circle"></i>
               <span data-i18n="forms.upload_avatar">Загрузить аватар</span>
             </label>
             <div class="popup__image-preview" id="avatar-preview"></div>
           </div>
-          
+
           <button type="submit" class="button popup__button" data-i18n="forms.save">Сохранить</button>
         </form>
       </div>
