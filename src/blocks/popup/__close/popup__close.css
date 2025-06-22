@@ -4,8 +4,8 @@
   color: #787878;
   font-size: 20px;
   position: absolute;
-  top: 1%;
-  right: 1%;
+  top: 5px;
+  right: 8px;
 
   -webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
@@ -37,7 +37,7 @@
   .popup__close {
     width: 20px;
     height: 20px;
-    top: -21px;
-    right: -27px;
+    top: 5px;
+    right: 3px
   }
 }
