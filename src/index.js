@@ -95,11 +95,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     nameInput.addEventListener('input', toggleNewButton);
   }
   
-  // Обработчик для файлового поля (будет вызываться из file-upload.js)
-  const imageInput = formNew?.querySelector('input[name="image-file"]');
-  if (imageInput) {
-    imageInput.addEventListener('change', toggleNewButton);
-  }
+  // Обработчик для файлового поля убран - используется встроенная логика в file-upload.js
   
   toggleNewButton();
 
@@ -115,11 +111,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (saveAvatarBtn) saveAvatarBtn.classList.toggle('disabled', !avatarValid);
   }
 
-  // Обработчик для файлового поля аватара
-  const avatarFileInput = formAvatar?.querySelector('input[name="avatar-file"]');
-  if (avatarFileInput) {
-    avatarFileInput.addEventListener('change', toggleAvatarButton);
-  }
+  // Обработчик для файлового поля аватара убран - используется встроенная логика в file-upload.js
   
   toggleAvatarButton();
 
@@ -192,7 +184,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     
     // Вызов функции для добавления карточек на страницу при загрузке,
     // когда DOM гарантированно готов и currentCards доступна.
-    renderCards(currentCards);
+    renderCards(currentCards, false, true);
     
     // Если это первый запуск (карточки загружены из начальных данных), сохраняем их
     if (savedCards.length === 0 && currentCards.length > 0) {
@@ -247,11 +239,10 @@ window.reinitFooterLanguageSwitchers = function() {
 
 // Функция для инициализации главного контента после авторизации
 window.initMainAppContent = function() {
-  // Инициализируем файловые загрузки
-  initFileUpload();
+  // Файловые загрузки уже инициализированы в основном DOMContentLoaded
   
   // Вызов функции для добавления карточек на страницу
-  renderCards(currentCards);
+  renderCards(currentCards, false, true);
   
   // Если это первый запуск (карточки загружены из начальных данных), сохраняем их
   const savedCards = loadCards();
@@ -286,6 +277,10 @@ window.initMainAppContent = function() {
   
   toggleNewButton();
   toggleAvatarButton();
+  
+  // Делаем функции валидации глобально доступными
+  window.toggleNewButton = toggleNewButton;
+  window.toggleAvatarButton = toggleAvatarButton;
 };
 
 // Установите изображение как background-image
@@ -328,6 +323,14 @@ function handleUnfavoriteFromActiveTab(cardLink) {
   currentCards = currentCards.filter(card => card.link !== cardLink);
   // Сохраняем обновленный список карточек в localStorage
   saveCards(currentCards);
+  
+  // Если активна вкладка избранного, перерисовываем её
+  const isFavoritesTabActive = profileTabFavorites?.classList.contains('active');
+  if (isFavoritesTabActive) {
+    const favLinks = JSON.parse(localStorage.getItem('favorites')) || [];
+    const favoriteCards = currentCards.filter(card => favLinks.includes(card.link));
+    renderCards(favoriteCards, true);
+  }
 }
 
 // Функция для запроса на удаление карточки (открывает модальное окно)
@@ -338,8 +341,43 @@ function handleCardDeleteRequest(cardElementDOM) {
 }
 
 // Функция для добавления карточек на страницу
-function renderCards(cardsToRender) {
+function renderCards(cardsToRender, isFromFavorites = false, isMainTab = false) {
   placesList.innerHTML = ''; // Очищаем список перед рендерингом
+  
+  // Если это вкладка избранного и карточек нет, показываем плейсхолдер
+  if (isFromFavorites && cardsToRender.length === 0) {
+    const emptyPlaceholder = document.createElement('div');
+    emptyPlaceholder.className = 'favorites-empty-placeholder';
+    emptyPlaceholder.innerHTML = `
+      <i class="fa-regular fa-bookmark favorites-empty-icon"></i>
+      <p class="favorites-empty-text">Добавьте изображение в избранное</p>
+    `;
+    placesList.appendChild(emptyPlaceholder);
+    return;
+  }
+  
+  // Если это основная вкладка и карточек нет, показываем плейсхолдер с кнопкой добавления
+  if (isMainTab && cardsToRender.length === 0) {
+    const emptyPlaceholder = document.createElement('div');
+    emptyPlaceholder.className = 'main-empty-placeholder';
+    emptyPlaceholder.innerHTML = `
+      <i class="fa-regular fa-images main-empty-icon"></i>
+      <p class="main-empty-text">Начните добавлять ваш контент</p>
+      <button class="main-empty-add-button" type="button">
+        <i class="fa-solid fa-plus"></i>
+      </button>
+    `;
+    placesList.appendChild(emptyPlaceholder);
+    
+    // Добавляем обработчик клика на кнопку в плейсхолдере
+    const addButton = emptyPlaceholder.querySelector('.main-empty-add-button');
+    addButton.addEventListener('click', () => {
+      openModal(popupNewCard);
+    });
+    
+    return;
+  }
+  
   cardsToRender.forEach((cardData) => {
     const cardElement = createCardElement(
       cardData,
@@ -355,6 +393,19 @@ function renderCards(cardsToRender) {
 // Функция для отображения карточек из корзины
 function renderTrashCards(trashCardsToRender) {
   placesList.innerHTML = ''; // Очищаем список перед рендерингом
+  
+  // Если корзина пуста, показываем плейсхолдер
+  if (trashCardsToRender.length === 0) {
+    const emptyPlaceholder = document.createElement('div');
+    emptyPlaceholder.className = 'trash-empty-placeholder';
+    emptyPlaceholder.innerHTML = `
+      <i class="fa-regular fa-trash-can trash-empty-icon"></i>
+      <p class="trash-empty-text">Здесь будет удаленный контент</p>
+    `;
+    placesList.appendChild(emptyPlaceholder);
+    return;
+  }
+  
   trashCardsToRender.forEach((cardData) => {
     const cardElement = createTrashCardElement(
       cardData,
@@ -397,6 +448,9 @@ function handleRestoreCard(cardData, cardElement) {
   // Удаляем элемент из DOM
   cardElement.remove();
   
+  // Перерисовываем корзину
+  renderTrashCards(trashCards);
+  
   console.log(`♻️ Карточка "${cardData.name}" восстановлена из корзины`);
 }
 
@@ -431,6 +485,9 @@ function permanentDeleteCard(cardData, cardElement) {
   // Удаляем элемент из DOM
   cardElement.remove();
   
+  // Перерисовываем корзину
+  renderTrashCards(trashCards);
+  
   console.log(`🗑️ Карточка "${cardData.name}" окончательно удалена`);
 }
 // Начальный рендеринг карточек перенесен внутрь DOMContentLoaded
@@ -452,7 +509,7 @@ if (profileTabFavorites) {
     const favLinks = JSON.parse(localStorage.getItem('favorites')) || [];
     // Фильтруем из currentCards
     const favoriteCards = currentCards.filter(card => favLinks.includes(card.link));
-    renderCards(favoriteCards);
+    renderCards(favoriteCards, true); // Передаем флаг isFromFavorites = true
   });
 }
 
@@ -463,7 +520,7 @@ if (profileTabImages) {
     document.querySelector('.profile-tab-trash').classList.remove('active');
     profileTabImages.classList.add('active');
     
-    renderCards(currentCards); // Отображаем currentCards
+    renderCards(currentCards, false, true); // Передаем флаг isMainTab = true
   });
 }
 
@@ -611,6 +668,11 @@ function closeDropdownMenu() {
 // Делаем функцию глобально доступной
 window.closeDropdownMenu = closeDropdownMenu;
 
+// Глобальная функция для рендеринга пустой вкладки избранного
+window.renderEmptyFavorites = function() {
+  renderCards([], true);
+};
+
 // Обработчики навигации
 if (navItemProfile) {
   navItemProfile.addEventListener("click", () => {
@@ -732,6 +794,12 @@ if (formNewCard) {
     // Сохраняем обновленный список карточек в localStorage
     saveCards(currentCards);
 
+    // Если активна основная вкладка, перерисовываем её для обновления плейсхолдера
+    const isImagesTabActive = profileTabImages?.classList.contains('active');
+    if (isImagesTabActive) {
+      renderCards(currentCards, false, true);
+    }
+
     closeModal(popupNewCard);
     evt.target.reset();
     
@@ -813,9 +881,9 @@ if (confirmDeleteButton) {
       if (isFavoritesTabActive) {
         const currentLocalFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
         const favoriteCardsToRender = currentCards.filter(card => currentLocalFavorites.includes(card.link));
-        renderCards(favoriteCardsToRender);
+        renderCards(favoriteCardsToRender, true); // Передаем флаг isFromFavorites = true
       } else if (isImagesTabActive) {
-        renderCards(currentCards);
+        renderCards(currentCards, false, true);
       }
     }
     closeModal(popupDelete);

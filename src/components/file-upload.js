@@ -40,6 +40,7 @@ class FileUploadManager {
     
     if (!file) {
       this.clearPreview(previewContainer, uploadContainer);
+      this.triggerValidation(type);
       return;
     }
 
@@ -48,6 +49,7 @@ class FileUploadManager {
     if (!validation.isValid) {
       this.showError(uploadContainer, validation.error);
       event.target.value = ''; // Очищаем input
+      this.triggerValidation(type);
       return;
     }
 
@@ -55,7 +57,10 @@ class FileUploadManager {
     this.updateUploadUI(uploadContainer, file.name);
     
     // Создаем превью
-    this.createPreview(file, previewContainer, uploadContainer, event.target);
+    this.createPreview(file, previewContainer, uploadContainer, event.target, type);
+    
+    // Вызываем валидацию кнопки после загрузки файла
+    this.triggerValidation(type);
   }
 
   validateFile(file) {
@@ -78,7 +83,7 @@ class FileUploadManager {
     return { isValid: true };
   }
 
-  createPreview(file, previewContainer, uploadContainer, inputElement) {
+  createPreview(file, previewContainer, uploadContainer, inputElement, type) {
     const reader = new FileReader();
     
     reader.onload = async (e) => {
@@ -112,6 +117,7 @@ class FileUploadManager {
       removeBtn.addEventListener('click', () => {
         this.clearPreview(previewContainer, uploadContainer);
         inputElement.value = '';
+        this.triggerValidation(type);
       });
       
       // Добавляем элементы в контейнер
@@ -217,6 +223,15 @@ class FileUploadManager {
       if (i18nKey) {
         label.textContent = t(i18nKey);
       }
+    }
+  }
+
+  // Функция валидации кнопок
+  triggerValidation(type) {
+    if (type === 'place' && typeof window.toggleNewButton === 'function') {
+      window.toggleNewButton();
+    } else if (type === 'avatar' && typeof window.toggleAvatarButton === 'function') {
+      window.toggleAvatarButton();
     }
   }
 
