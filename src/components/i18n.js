@@ -2,8 +2,10 @@
 class I18nManager {
   constructor() {
     this.currentLanguage = localStorage.getItem('language') || 'en';
-    this.translations = {};
     this.fallbackLanguage = 'en';
+    this.translations = {};
+    this.globalClickHandlerAdded = false;
+    this.footerSwitchesInitialized = new Set();
   }
 
   async init() {
@@ -119,6 +121,13 @@ class I18nManager {
         option.classList.add('active');
       }
     });
+
+    // Обновляем footer dropdown
+    const footerLangCurrents = document.querySelectorAll('.footer__lang-current');
+    const langNames = { 'ru': 'Русский', 'en': 'English' };
+    footerLangCurrents.forEach(current => {
+      current.textContent = langNames[this.currentLanguage] || 'Русский';
+    });
   }
 
   // Привязать обработчики событий
@@ -149,6 +158,57 @@ class I18nManager {
         this.switchLanguage(language);
       });
     });
+
+    // Обработчики для footer переключателей языка
+    this.initFooterLanguageSwitchers();
+  }
+
+  // Инициализация переключателей языка в footer
+  initFooterLanguageSwitchers() {
+    const footerSwitches = document.querySelectorAll('.footer__language-switch');
+    
+    footerSwitches.forEach(switchElement => {
+      // Пропускаем уже инициализированные переключатели
+      if (this.footerSwitchesInitialized.has(switchElement)) {
+        return;
+      }
+      
+      const dropdownBtn = switchElement.querySelector('.footer__lang-dropdown-btn');
+      const dropdown = switchElement.querySelector('.footer__lang-dropdown');
+      const options = switchElement.querySelectorAll('.footer__lang-option');
+      
+      // Обработчик клика на кнопку dropdown
+      if (dropdownBtn) {
+        dropdownBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          switchElement.classList.toggle('open');
+        });
+      }
+      
+      // Обработчики для опций языка
+      options.forEach(option => {
+        option.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const language = option.getAttribute('data-lang');
+          this.switchLanguage(language);
+          switchElement.classList.remove('open');
+        });
+      });
+      
+      // Отмечаем как инициализированный
+      this.footerSwitchesInitialized.add(switchElement);
+    });
+    
+    // Добавляем глобальный обработчик только один раз
+    if (!this.globalClickHandlerAdded) {
+      document.addEventListener('click', () => {
+        const allSwitches = document.querySelectorAll('.footer__language-switch');
+        allSwitches.forEach(switchElement => {
+          switchElement.classList.remove('open');
+        });
+      });
+      this.globalClickHandlerAdded = true;
+    }
   }
 
   // Определить язык по CSS классу кнопки
@@ -185,4 +245,10 @@ export function switchLanguage(language) {
 
 export function getCurrentLanguage() {
   return i18nManager.getCurrentLanguage();
-} 
+}
+
+// Глобальные функции для удобства использования
+window.t = (key) => i18nManager.t(key);
+window.switchLanguage = (language) => i18nManager.switchLanguage(language);
+window.getCurrentLanguage = () => i18nManager.getCurrentLanguage();
+window.reinitFooterLanguageSwitchers = () => i18nManager.initFooterLanguageSwitchers(); 

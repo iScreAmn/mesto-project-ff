@@ -1,10 +1,13 @@
 import "./pages/index.css";
 import "./blocks/theme/theme.css";
+import "./blocks/auth/auth.css";
 import avatarImage from "./images/avatar.jpg";
+import mestoImage from "./images/mesto_image.png";
 import { initialCards as importedInitialCards } from "./components/cards.js"; // Переименовываем для ясности
 import { openModal, closeModal } from "./components/modal.js";
 import { initThemeToggle } from "./components/theme.js";
-import { initI18n } from "./components/i18n.js";
+import { initI18n, switchLanguage } from "./components/i18n.js";
+import { initAuth, isAuthenticated } from "./components/auth.js";
 import { initFileUpload, getImageBase64, hasFile, resetFileUpload } from "./components/file-upload.js";
 import { lockScroll, unlockScroll } from "./components/scroll-lock.js";
 import '@fortawesome/fontawesome-free/css/all.css';
@@ -42,7 +45,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Инициализируем системы
   initThemeToggle();
   await initI18n();
-  initFileUpload();
+  initAuth();
+  
+  // Сделаем switchLanguage глобальной функцией для доступа из других модулей
+  window.switchLanguage = switchLanguage;
 
   // Инициализация обработчиков для попапа изображения
   const popupImage = document.querySelector('.popup_type_image');
@@ -180,23 +186,117 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
-  // Вызов функции для добавления карточек на страницу при загрузке,
-  // когда DOM гарантированно готов и currentCards доступна.
+  // Инициализируем контент только для авторизованных пользователей
+  if (isAuthenticated()) {
+    initFileUpload();
+    
+    // Вызов функции для добавления карточек на страницу при загрузке,
+    // когда DOM гарантированно готов и currentCards доступна.
+    renderCards(currentCards);
+    
+    // Если это первый запуск (карточки загружены из начальных данных), сохраняем их
+    if (savedCards.length === 0 && currentCards.length > 0) {
+      saveCards(currentCards);
+    }
+    
+    // Обновляем состояние кнопок форм после инициализации
+    toggleNewButton();
+    toggleAvatarButton();
+  }
+});
+
+// Функция для переинициализации footer переключателей языка
+window.reinitFooterLanguageSwitchers = function() {
+  const footerSwitches = document.querySelectorAll('.footer__language-switch');
+  
+  footerSwitches.forEach(switchElement => {
+    const dropdownBtn = switchElement.querySelector('.footer__lang-dropdown-btn');
+    const options = switchElement.querySelectorAll('.footer__lang-option');
+    
+    // Клонируем элементы для удаления старых обработчиков
+    if (dropdownBtn) {
+      const newDropdownBtn = dropdownBtn.cloneNode(true);
+      dropdownBtn.parentNode.replaceChild(newDropdownBtn, dropdownBtn);
+      
+      newDropdownBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        switchElement.classList.toggle('open');
+      });
+    }
+    
+    options.forEach(option => {
+      const newOption = option.cloneNode(true);
+      option.parentNode.replaceChild(newOption, option);
+      
+      newOption.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const language = newOption.getAttribute('data-lang');
+        switchLanguage(language);
+        switchElement.classList.remove('open');
+      });
+    });
+  });
+  
+  // Переинициализируем глобальный обработчик закрытия
+  document.addEventListener('click', () => {
+    footerSwitches.forEach(switchElement => {
+      switchElement.classList.remove('open');
+    });
+  });
+};
+
+// Функция для инициализации главного контента после авторизации
+window.initMainAppContent = function() {
+  // Инициализируем файловые загрузки
+  initFileUpload();
+  
+  // Вызов функции для добавления карточек на страницу
   renderCards(currentCards);
   
   // Если это первый запуск (карточки загружены из начальных данных), сохраняем их
+  const savedCards = loadCards();
   if (savedCards.length === 0 && currentCards.length > 0) {
     saveCards(currentCards);
   }
   
-  // Обновляем состояние кнопок форм после инициализации
+  // Обновляем состояние кнопок форм
+  const toggleNewButton = () => {
+    const formNew = document.querySelector('.popup_type_new-card .popup__form');
+    const saveCardBtn = formNew?.querySelector('.popup__button');
+    const nameInput = formNew?.querySelector('input[name="place-name"]');
+    const imageInput = formNew?.querySelector('input[name="image-file"]');
+    
+    const nameValid = nameInput?.value.trim() !== "";
+    const imageValid = imageInput?.files.length > 0;
+    const allValid = nameValid && imageValid;
+    
+    if (saveCardBtn) saveCardBtn.disabled = !allValid;
+    if (saveCardBtn) saveCardBtn.classList.toggle('disabled', !allValid);
+  };
+  
+  const toggleAvatarButton = () => {
+    const formAvatar = document.querySelector('.popup_type_avatar .popup__form');
+    const saveAvatarBtn = formAvatar?.querySelector('.popup__button');
+    const avatarInput = formAvatar?.querySelector('input[name="avatar-file"]');
+    const avatarValid = avatarInput?.files.length > 0;
+    
+    if (saveAvatarBtn) saveAvatarBtn.disabled = !avatarValid;
+    if (saveAvatarBtn) saveAvatarBtn.classList.toggle('disabled', !avatarValid);
+  };
+  
   toggleNewButton();
   toggleAvatarButton();
-});
+};
 
 // Установите изображение как background-image
 const profileImageDiv = document.querySelector(".profile__image");
 profileImageDiv.style.backgroundImage = `url(${avatarImage})`;
+
+// Установите изображение для auth mockup
+const mestoMockupImage = document.querySelector("#mesto-mockup-image");
+if (mestoMockupImage) {
+  mestoMockupImage.src = mestoImage;
+}
 
 // DOM-элементы
 const placesList = document.querySelector(".places__list");
@@ -480,8 +580,15 @@ if (burgerButton && dropdownOverlay) {
 
 // Функция закрытия меню
 function closeDropdownMenu() {
-  burgerButton.classList.remove("open");
-  dropdownOverlay.classList.remove("open");
+  const burgerButtonElement = document.querySelector('.navigation__button');
+  const dropdownOverlayElement = document.querySelector('.dropdown-overlay');
+  
+  if (burgerButtonElement) {
+    burgerButtonElement.classList.remove("open");
+  }
+  if (dropdownOverlayElement) {
+    dropdownOverlayElement.classList.remove("open");
+  }
   
   // Закрываем подменю темы, если оно есть
   const themeSubmenu = document.querySelector(".nav-submenu-theme");
@@ -496,8 +603,13 @@ function closeDropdownMenu() {
   }
   
   // Используем централизованное управление скроллом
-  unlockScroll();
+  if (typeof unlockScroll === 'function') {
+    unlockScroll();
+  }
 }
+
+// Делаем функцию глобально доступной
+window.closeDropdownMenu = closeDropdownMenu;
 
 // Обработчики навигации
 if (navItemProfile) {

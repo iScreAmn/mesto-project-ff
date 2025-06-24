@@ -1,9 +1,10 @@
 @import url('./__logo/header__logo.css');
 
+.header.page__section,
 .header {
   font-family: 'Inter', Arial, sans-serif;
   min-height: 120px;
-  display: flex;
+  display: flex !important;
   align-items: center;
   justify-content: space-between;
   flex-shrink: 0;
@@ -36,6 +37,7 @@
   transition: all 0.3s ease;
   z-index: 1001;
   position: relative;
+  flex-shrink: 0;
 }
 
 .navigation__button:hover {
@@ -505,9 +507,18 @@
 
 /* Мобильная адаптация */
 @media screen and (max-width: 480px) {
+  .header.page__section,
   .header {
     min-height: 100px;
     padding: 0 16px;
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .navigation__button {
+    flex-shrink: 0;
+    padding: 8px;
   }
 
   .dropdown-menu {

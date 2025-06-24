@@ -52,5 +52,23 @@
   },
   "footer": {
     "copyright": "© 2025 Dimitri Jmukhadze"
+  },
+  "auth": {
+    "login_title": "Sign In",
+    "register_title": "Sign Up",
+    "welcome_title": "Welcome to Mesto",
+    "welcome_subtitle": "Share your favorite places with friends and create memories",
+    "email_placeholder": "Email",
+    "password_placeholder": "Password",
+    "confirm_password_placeholder": "Confirm Password",
+    "login_button": "Sign In",
+    "register_button": "Sign Up",
+    "toggle_to_register": "Don't have an account? Sign up",
+    "toggle_to_login": "Already have an account? Sign in",
+    "logout": "Logout",
+    "logout_desc": "Sign out of account",
+    "error_passwords_mismatch": "Passwords don't match",
+    "error_invalid_credentials": "Invalid email or password",
+    "error_user_exists": "User with this email already exists"
   }
 } 

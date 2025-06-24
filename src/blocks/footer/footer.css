@@ -6,8 +6,126 @@
   padding: 30px 0 60px;
 }
 
+.footer__wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.footer__content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.footer__language-switch {
+  position: relative;
+  display: inline-block;
+}
+
+.footer__lang-dropdown-btn {
+  background: none;
+  border: 1px solid var(--text-secondary);
+  padding: 4px 8px;
+  font-size: 12px;
+  color: var(--text-color);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 80px;
+  justify-content: space-between;
+}
+
+.footer__lang-dropdown-btn:hover {
+  background: var(--hover-background);
+  border-color: var(--text-color);
+}
+
+.footer__lang-current {
+  font-weight: 500;
+}
+
+.footer__lang-arrow {
+  font-size: 10px;
+  transition: transform 0.2s ease;
+}
+
+.footer__language-switch.open .footer__lang-arrow {
+  transform: rotate(180deg);
+}
+
+.footer__lang-dropdown {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  background: var(--background-color);
+  border: 1px solid var(--text-secondary);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(5px);
+  transition: all 0.2s ease;
+  z-index: 1000;
+  margin-bottom: 4px;
+}
+
+.footer__language-switch.open .footer__lang-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.footer__lang-option {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 6px 8px;
+  font-size: 12px;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: background 0.2s ease;
+  font-family: inherit;
+  text-align: left;
+}
+
+.footer__lang-option:hover {
+  background: var(--hover-background);
+}
+
+.footer__lang-option:first-child {
+  border-radius: 4px 4px 0 0;
+}
+
+.footer__lang-option:last-child {
+  border-radius: 0 0 4px 4px;
+}
+
 @media screen and (max-width: 568px) {
   .footer {
     padding: 30px 0 36px;
+  }
+  
+  .footer__content {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+  
+  .footer__lang-dropdown-btn {
+    font-size: 11px;
+    padding: 3px 6px;
+    min-width: 70px;
+  }
+  
+  .footer__lang-option {
+    font-size: 11px;
+    padding: 5px 6px;
   }
 }

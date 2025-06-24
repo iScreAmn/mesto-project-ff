@@ -6,6 +6,9 @@
   <meta name="viewport"
     content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
   <title>Mesto</title>
 </head>
 
@@ -78,6 +81,17 @@
               </div>
               <i class="fa-solid fa-chevron-right nav-item-arrow"></i>
             </button>
+
+            <button class="nav-item nav-item-logout">
+              <div class="nav-item-icon">
+                <i class="fa-solid fa-sign-out-alt"></i>
+              </div>
+              <div class="nav-item-content">
+                <span class="nav-item-title" data-i18n="auth.logout">Выйти</span>
+                <span class="nav-item-description" data-i18n="auth.logout_desc">Выход из аккаунта</span>
+              </div>
+              <i class="fa-solid fa-chevron-right nav-item-arrow"></i>
+            </button>
           </div>
 
           <!-- Подменю для темы -->
@@ -140,35 +154,124 @@
         </nav>
       </div>
     </div>
-    <main class="content">
-      <section class="profile page__section">
-        <div class="profile__image">
-          <i class="fa-solid fa-pen fa-bounce profile__icon"></i>
+
+    <!-- Страница авторизации -->
+    <div class="auth-page">
+      <div class="auth-container">
+        <!-- Левая часть с изображением -->
+        <div class="auth-mockup">
+          <img src="" alt="Mesto App Preview" class="auth-mockup-image" id="mesto-mockup-image">
         </div>
-        <div class="profile__info">
-          <h1 class="profile__title">Franklin Haris</h1>
-          <button class="profile__edit-button" type="button"></button>
-          <p class="profile__description">Ocean Explorer</p>
+
+        <!-- Правая часть с формой -->
+        <div class="auth-form-container">
+          <div class="auth-card">
+            <div class="auth-header">
+              <div class="auth-logo"></div>
+              <p class="auth-title" data-i18n="auth.welcome_subtitle">Делитесь своими любимыми местами с друзьями</p>
+            </div>
+
+            <form class="auth-form">
+              <div class="auth-input-group">
+                <input type="email" name="email" class="auth-input" data-i18n="auth.email_placeholder"
+                  placeholder="Телефон, имя пользователя или эл. адрес" required>
+              </div>
+
+              <div class="auth-input-group">
+                <input type="password" name="password" class="auth-input" data-i18n="auth.password_placeholder"
+                  placeholder="Пароль" required>
+              </div>
+
+              <div class="auth-input-group auth-confirm-password-field">
+                <input type="password" name="confirmPassword" class="auth-input"
+                  data-i18n="auth.confirm_password_placeholder" placeholder="Подтвердите пароль">
+              </div>
+
+              <button type="submit" class="auth-submit" data-i18n="auth.login_button">Войти</button>
+
+              <div class="auth-error"></div>
+            </form>
+
+            <div class="auth-forgot-password">
+              <a href="#">Забыли пароль?</a>
+            </div>
+          </div>
+
+          <div class="auth-signup-card">
+            У вас нет аккаунта?
+            <button type="button" class="auth-toggle-mode" data-i18n="auth.toggle_to_register">
+              Зарегистрироваться
+            </button>
+          </div>
         </div>
-        <button class="profile__add-button" type="button">
-          <i class="fa-solid fa-plus fa-beat"></i>
-        </button>
-        <div class="profile__tabs">
-          <button class="profile-tab profile-tab-image"><i class="fa-solid fa-house"></i></button>
-          <button class="profile-tab profile-tab-favorites"><i class="fa-regular fa-bookmark"></i></button>
-          <button class="profile-tab profile-tab-trash"><i class="fa-regular fa-trash-can"></i></button>
+      </div>
+
+      <footer class="footer">
+        <div class="footer__content">
+          <div class="footer__wrapper page__section">
+            <p class="footer__copyright" data-i18n="footer.copyright">
+              © 2025 Dimitri Jmukhadze
+            </p>
+            <div class="footer__language-switch">
+              <button class="footer__lang-dropdown-btn">
+                <span class="footer__lang-current">Русский</span>
+                <i class="fa-solid fa-chevron-down footer__lang-arrow"></i>
+              </button>
+              <div class="footer__lang-dropdown">
+                <button class="footer__lang-option" data-lang="en">English</button>
+                <button class="footer__lang-option" data-lang="ru">Русский</button>
+              </div>
+            </div>
+          </div>
         </div>
-      </section>
-      <section class="places page__section">
-        <ul class="places__list">
-        </ul>
-      </section>
-    </main>
-    <footer class="footer page__section">
-      <p class="footer__copyright" data-i18n="footer.copyright">
-        © 2025 Dimitri Jmukhadze
-      </p>
-    </footer>
+      </footer>
+    </div>
+
+    <!-- Основной контент (будет скрыт до авторизации) -->
+    <div class="main-content">
+      <main class="content">
+        <section class="profile page__section">
+          <div class="profile__image">
+            <i class="fa-solid fa-pen fa-bounce profile__icon"></i>
+          </div>
+          <div class="profile__info">
+            <h1 class="profile__title">Franklin Haris</h1>
+            <button class="profile__edit-button" type="button"></button>
+            <p class="profile__description">Ocean Explorer</p>
+          </div>
+          <button class="profile__add-button" type="button">
+            <i class="fa-solid fa-plus fa-beat"></i>
+          </button>
+          <div class="profile__tabs">
+            <button class="profile-tab profile-tab-image"><i class="fa-solid fa-house"></i></button>
+            <button class="profile-tab profile-tab-favorites"><i class="fa-regular fa-bookmark"></i></button>
+            <button class="profile-tab profile-tab-trash"><i class="fa-regular fa-trash-can"></i></button>
+          </div>
+        </section>
+        <section class="places page__section">
+          <ul class="places__list">
+          </ul>
+        </section>
+      </main>
+
+      <footer class="footer page__section">
+        <div class="footer__content">
+          <p class="footer__copyright" data-i18n="footer.copyright">
+            © 2025 Dimitri Jmukhadze
+          </p>
+          <div class="footer__language-switch">
+            <button class="footer__lang-dropdown-btn">
+              <span class="footer__lang-current">Русский</span>
+              <i class="fa-solid fa-chevron-down footer__lang-arrow"></i>
+            </button>
+            <div class="footer__lang-dropdown">
+              <button class="footer__lang-option" data-lang="en">English</button>
+              <button class="footer__lang-option" data-lang="ru">Русский</button>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
 
     <div class="popup popup_type_edit">
       <div class="popup__content">

@@ -52,5 +52,23 @@
   },
   "footer": {
     "copyright": "© 2025 Dimitri Jmukhadze"
+  },
+  "auth": {
+    "login_title": "Вход в аккаунт",
+    "register_title": "Регистрация",
+    "welcome_title": "Добро пожаловать в Место",
+    "welcome_subtitle": "Делитесь своими любимыми местами с друзьями и создавайте воспоминания",
+    "email_placeholder": "Email",
+    "password_placeholder": "Пароль",
+    "confirm_password_placeholder": "Подтвердите пароль",
+    "login_button": "Войти",
+    "register_button": "Зарегистрироваться",
+    "toggle_to_register": "Нет аккаунта? Зарегистрироваться",
+    "toggle_to_login": "Уже есть аккаунт? Войти",
+    "logout": "Выйти",
+    "logout_desc": "Выход из аккаунта",
+    "error_passwords_mismatch": "Пароли не совпадают",
+    "error_invalid_credentials": "Неверные email или пароль",
+    "error_user_exists": "Пользователь с таким email уже существует"
   }
 } 
