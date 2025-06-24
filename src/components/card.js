@@ -52,6 +52,16 @@ export function createCardElement(cardDetails, onDeleteCard, onLikeCard, onImage
         favorites.splice(index, 1);
         if (isFavoritesTabActive) { // Если мы на вкладке избранного, удаляем карточку из DOM
           cardElement.remove();
+          
+          // Проверяем, остались ли еще карточки во вкладке избранного
+          // Если нет, нужно показать плейсхолдер
+          const remainingCards = document.querySelectorAll('.places__list .places__item');
+          if (remainingCards.length === 0) {
+            // Вызываем глобальную функцию для обновления пустой вкладки избранного
+            if (typeof window.renderEmptyFavorites === 'function') {
+              window.renderEmptyFavorites();
+            }
+          }
         }
       } else { // Если не было в избранном, добавляем
         favorites.push(cardDetails.link);

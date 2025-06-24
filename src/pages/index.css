@@ -13,6 +13,150 @@
 @import url('../blocks/popup/_is-opened/popup_is-opened.css');
 @import url('../blocks/theme/theme.css');
 
+/* Sticky footer для главной страницы */
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+}
+
+.footer {
+  margin-top: auto;
+}
+
+/* Плейсхолдер для пустой корзины */
+.trash-empty-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  color: #8b8b8b;
+  min-height: 200px;
+}
+
+.trash-empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+
+.trash-empty-text {
+  font-size: 18px;
+  font-weight: 400;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Плейсхолдер для пустого избранного */
+.favorites-empty-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  color: #8b8b8b;
+  min-height: 200px;
+}
+
+.favorites-empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+
+.favorites-empty-text {
+  font-size: 18px;
+  font-weight: 400;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Плейсхолдер для пустой основной вкладки */
+.main-empty-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  color: #8b8b8b;
+  min-height: 200px;
+}
+
+.main-empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+
+.main-empty-text {
+  font-size: 18px;
+  font-weight: 400;
+  margin: 0 0 24px 0;
+  line-height: 1.4;
+}
+
+.main-empty-add-button {
+  width: 150px;
+  height: 50px;
+  background-color: transparent;
+  border-radius: 2px;
+  border: 2px solid var(--border-color);
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-empty-add-button i {
+  font-size: 24px;
+  color: var(--text-color);
+  pointer-events: none;
+}
+
+.main-empty-add-button:hover {
+  opacity: 0.6;
+}
+
+@media screen and (max-width: 740px) {
+  .main-empty-add-button {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .main-empty-add-button {
+    width: 100%;
+  }
+}
+
 /* Исправление футера на странице авторизации */
 .auth-page .footer {
   margin-top: auto;
