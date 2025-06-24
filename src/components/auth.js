@@ -108,11 +108,29 @@ class AuthManager {
 
   // Вход в систему
   login(email, password) {
+    console.log('🔐 Попытка входа:', email, password);
+    
     // Простая проверка - в реальном приложении это делается на сервере
     const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+    console.log('👥 Зарегистрированные пользователи:', users);
+    
+    // Для демо - создаем тестового пользователя, если его нет
+    if (users.length === 0) {
+      const testUser = {
+        id: 'user_demo',
+        email: 'test@test.com',
+        password: 'test123',
+        registeredAt: new Date().toISOString()
+      };
+      users.push(testUser);
+      localStorage.setItem('registeredUsers', JSON.stringify(users));
+      console.log('✨ Создан тестовый пользователь: test@test.com / test123');
+    }
+    
     const user = users.find(u => u.email === email && u.password === password);
 
     if (user) {
+      console.log('✅ Вход успешен');
       this.currentUser = { email: user.email, id: user.id };
       this.isAuthenticated = true;
       localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
@@ -120,6 +138,7 @@ class AuthManager {
       this.updateUI();
       this.hideAuthError();
     } else {
+      console.log('❌ Неверные данные для входа');
       this.showAuthError(t('auth.error_invalid_credentials'));
     }
   }
@@ -180,6 +199,8 @@ class AuthManager {
 
   // Показать/скрыть контент в зависимости от состояния авторизации
   showMainContent() {
+    console.log('🏠 Переключение на главную страницу...');
+    
     // Закрываем боковое меню перед показом основного контента
     if (typeof window.closeDropdownMenu === 'function') {
       window.closeDropdownMenu();
@@ -190,10 +211,29 @@ class AuthManager {
     const header = document.querySelector('.header');
     const dropdownOverlay = document.querySelector('.dropdown-overlay');
     
-    if (authPage) authPage.style.display = 'none';
-    if (mainContent) mainContent.style.display = 'block';
-    if (header) header.style.display = 'block';
-    if (dropdownOverlay) dropdownOverlay.style.display = 'block';
+    console.log('📄 Найденные элементы:', {
+      authPage: !!authPage,
+      mainContent: !!mainContent,
+      header: !!header,
+      dropdownOverlay: !!dropdownOverlay
+    });
+    
+    if (authPage) {
+      authPage.style.display = 'none';
+      console.log('🚫 Скрыта страница авторизации');
+    }
+    if (mainContent) {
+      mainContent.style.display = 'block';
+      console.log('✅ Показан основной контент');
+    }
+    if (header) {
+      header.style.display = 'block';
+      console.log('✅ Показан header');
+    }
+    if (dropdownOverlay) {
+      dropdownOverlay.style.display = 'block';
+      console.log('✅ Показан dropdown overlay');
+    }
     
     // Инициализируем главный контент после авторизации
     this.initMainContent();
